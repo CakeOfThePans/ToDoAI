@@ -34,7 +34,7 @@ export default function SignUp() {
       <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <TextInput type="text" placeholder='Username' id='username' onChange={handleChange}/>
-        <TextInput type="email" placeholder='Email' id='email' onChange={handleChange}/>
+        <TextInput type="text" placeholder='Email' id='email' onChange={handleChange}/>
         <TextInput type="password" placeholder='Password' id='password' onChange={handleChange}/>
         <Button gradientDuoTone='purpleToBlue' type='submit' disabled={loading}>
           {loading ? (
