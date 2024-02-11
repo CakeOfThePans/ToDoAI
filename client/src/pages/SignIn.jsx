@@ -11,7 +11,8 @@ import {
 
 export default function SignIn() {
   const [formData, setFormData] = useState({})
-  const {loading, error: errorMessage} = useSelector(state => state.user)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const {loading} = useSelector(state => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleChange = (e) => {
@@ -20,6 +21,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      setErrorMessage(null)
       dispatch(signInStart())
       const res = await axios.post(
         "http://localhost:3000/users/sign-in",
@@ -30,7 +32,8 @@ export default function SignIn() {
         navigate("/")
       }
     } catch (err) {
-      dispatch(signInFailure(err.response.data))
+      dispatch(signInFailure())
+      setErrorMessage(err.response.data)
     }
   }
 
