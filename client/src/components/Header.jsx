@@ -1,6 +1,6 @@
-import { Avatar, Button, Dropdown, Navbar } from "flowbite-react"
-import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { Avatar, Button, Dropdown, Navbar } from 'flowbite-react'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user)
@@ -16,7 +16,15 @@ export default function Header() {
         <Dropdown
           arrowIcon={false}
           inline
-          label={<Avatar alt="user" img={currentUser.profilePicture} rounded />}
+          label={
+            <Avatar
+              alt="user"
+              img={
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png'
+              }
+              rounded
+            />
+          }
         >
           <Dropdown.Header>
             <span className="block text-sm">{currentUser.username}</span>
@@ -24,7 +32,7 @@ export default function Header() {
               {currentUser.email}
             </span>
           </Dropdown.Header>
-          <Link to={"/dashboard?tab=profile"}>
+          <Link to={'/dashboard?tab=profile'}>
             <Dropdown.Item>Profile</Dropdown.Item>
           </Link>
           <Dropdown.Divider />
