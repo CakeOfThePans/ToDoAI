@@ -1,5 +1,5 @@
 import { Sidebar } from 'flowbite-react'
-import { HiUser } from 'react-icons/hi'
+import { HiUser, HiArrowSmRight } from 'react-icons/hi'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -22,6 +22,9 @@ export default function DashSidebar() {
               Profile
             </Sidebar.Item>
           </Link>
+          <Sidebar.Item active icon={HiArrowSmRight} className='cursor-pointer'>
+            Sign Out
+          </Sidebar.Item>
           {/* Add other things later */}
         </Sidebar.ItemGroup>
       </Sidebar.Items>
