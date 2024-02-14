@@ -21,11 +21,10 @@ export default function DashProfile() {
           placeholder="email"
           defaultValue={currentUser.email}
         />
-        <TextInput type="password" id="password" placeholder="New password" />
         <TextInput
           type="password"
-          id="confirm-password"
-          placeholder="Confirm password"
+          id="password"
+          placeholder="New password"
         />
         <Button gradientDuoTone="purpleToBlue" type="submit" outline>
           Update
