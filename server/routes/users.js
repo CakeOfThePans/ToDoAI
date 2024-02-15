@@ -67,7 +67,7 @@ router.post('/sign-in', async (req, res) => {
     res
       .status(200)
       .cookie('access_token', token, {
-        httpOnly: true,
+        httpOnly: false,
       })
       .send(rest)
   } catch (err) {

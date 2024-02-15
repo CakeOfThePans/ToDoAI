@@ -7,6 +7,10 @@ import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import Dashboard from './pages/Dashboard'
 
+//allow access to cookies for api requests
+import axios from 'axios'
+axios.defaults.withCredentials = true
+
 export default function App() {
   return (
     <BrowserRouter>
