@@ -1,9 +1,20 @@
 import { Avatar, Button, Dropdown, Navbar } from 'flowbite-react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { signOutSuccess } from '../redux/user/userSlice'
+import axios from 'axios'
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+  const handleSignout = async () => {
+    try {
+      const res = await axios.post(`http://localhost:3000/auth/sign-out`)
+      dispatch(signOutSuccess())
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <Navbar className="border-b-2">
       <Link
@@ -36,7 +47,7 @@ export default function Header() {
             <Dropdown.Item>Profile</Dropdown.Item>
           </Link>
           <Dropdown.Divider />
-          <Dropdown.Item>Sign Out</Dropdown.Item>
+          <Dropdown.Item onClick={handleSignout}>Sign Out</Dropdown.Item>
         </Dropdown>
       ) : (
         <Link to="/sign-in">

@@ -74,4 +74,13 @@ router.post('/sign-in', async (req, res) => {
   }
 })
 
+router.post('/sign-out', (req, res) => {
+  try{
+    res.clearCookie('access_token').status(200).send('User has been signed out')
+  }
+  catch(err){
+    res.status(500).send(err.message)
+  }
+})
+
 export default router
