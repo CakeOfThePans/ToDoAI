@@ -16,7 +16,7 @@ export default function SignUp() {
     try{
       setLoading(true)
       setErrorMessage(null)
-      const res = await axios.post('http://localhost:3000/users/sign-up', formData)
+      const res = await axios.post('http://localhost:3000/auth/sign-up', formData)
       console.log(res)
       setLoading(false)
       if(res.status === 200){

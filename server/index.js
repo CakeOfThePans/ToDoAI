@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
+import { verifyToken } from './middleware/verifyUser.js'
+import authRouter from './routes/auth.js'
 import userRouter from './routes/users.js'
 
 dotenv.config()
@@ -30,4 +32,5 @@ mongoose
     console.log(err)
   })
 
-app.use('/users', userRouter)
+app.use('/auth', authRouter)
+app.use('/users', verifyToken, userRouter)
