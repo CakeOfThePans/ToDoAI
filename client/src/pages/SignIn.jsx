@@ -8,7 +8,7 @@ import { signInSuccess } from "../redux/user/userSlice"
 export default function SignIn() {
   const [formData, setFormData] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
-  const [loading, setLoading] = useState(null)
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleChange = (e) => {
@@ -17,7 +17,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      setLoading(false)
+      setLoading(true)
       setErrorMessage(null)
       const res = await axios.post(
         "http://localhost:3000/auth/sign-in",
@@ -28,7 +28,7 @@ export default function SignIn() {
         navigate("/")
       }
     } catch (err) {
-      setLoading(true)
+      setLoading(false)
       setErrorMessage(err.response.data)
     }
   }
