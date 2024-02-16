@@ -2,17 +2,13 @@ import { Alert, Button, Spinner, TextInput } from "flowbite-react"
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../redux/user/userSlice"
+import { useDispatch } from "react-redux"
+import { signInSuccess } from "../redux/user/userSlice"
 
 export default function SignIn() {
   const [formData, setFormData] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
-  const {loading} = useSelector(state => state.user)
+  const [loading, setLoading] = useState(null)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleChange = (e) => {
@@ -21,8 +17,8 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      setLoading(false)
       setErrorMessage(null)
-      dispatch(signInStart())
       const res = await axios.post(
         "http://localhost:3000/auth/sign-in",
         formData
@@ -32,7 +28,7 @@ export default function SignIn() {
         navigate("/")
       }
     } catch (err) {
-      dispatch(signInFailure())
+      setLoading(true)
       setErrorMessage(err.response.data)
     }
   }

@@ -3,12 +3,8 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import {
-  updateStart,
   updateSuccess,
-  updateFailure,
-  deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure,
 } from '../redux/user/userSlice'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
@@ -32,7 +28,6 @@ export default function DashProfile() {
     setUserUpdateSuccess(null)
     setErrorMessage(null)
     try {
-      dispatch(updateStart())
       const res = await axios.put(
         `http://localhost:3000/users/update/${currentUser._id}`,
         formData
@@ -41,7 +36,6 @@ export default function DashProfile() {
       setUserUpdateSuccess('User updated successfully')
       setFormData({ ...formData, password: '' })
     } catch (err) {
-      dispatch(updateFailure())
       setErrorMessage(err.response.data)
       setFormData({ ...formData, password: '' })
     }
@@ -49,14 +43,12 @@ export default function DashProfile() {
   const handleDeleteUser = async () => {
     setShowModal(false)
     try {
-      dispatch(deleteUserStart())
       const res = await axios.delete(
         `http://localhost:3000/users/delete/${currentUser._id}`,
         formData
       )
       dispatch(deleteUserSuccess(res.data))
     } catch (err) {
-      dispatch(deleteUserFailure)
       setErrorMessage(err.response.data)
     }
   }
