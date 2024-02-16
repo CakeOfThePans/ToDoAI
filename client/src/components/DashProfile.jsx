@@ -16,6 +16,7 @@ export default function DashProfile() {
   const [formData, setFormData] = useState({
     username: currentUser.username,
     email: currentUser.email,
+    password: ''
   })
   const dispatch = useDispatch()
   const handleChange = (e) => {
@@ -33,9 +34,11 @@ export default function DashProfile() {
       )
       dispatch(updateSuccess(res.data))
       setUserUpdateSuccess('User updated successfully')
+      setFormData({ ...formData, password: '' });
     } catch (err) {
       dispatch(updateFailure())
       setErrorMessage(err.response.data)
+      setFormData({ ...formData, password: '' });
     }
   }
   return (
@@ -60,6 +63,7 @@ export default function DashProfile() {
           type="password"
           id="password"
           placeholder="New password"
+          value={formData.password}
           onChange={handleChange}
         />
         <Button gradientDuoTone="purpleToBlue" type="submit" outline>
