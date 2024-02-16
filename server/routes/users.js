@@ -12,10 +12,10 @@ router.put('/update/:userId', async (req, res) => {
     if (req.body.username.includes(' ')) {
       return res.status(400).send('Username cannot contains spaces')
     }
-    
+
     const { username, email, password } = req.body
-    if(!password){
-        req.body.password = 'dummypass'
+    if (!password) {
+      req.body.password = 'dummypass'
     }
 
     const { error } = validateUser(req.body)
@@ -25,7 +25,7 @@ router.put('/update/:userId', async (req, res) => {
         .status(400)
         .send(errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1))
     }
-    
+
     //check that the username is not taken
     const hasUsername = await User.findOne({
       username,
@@ -41,8 +41,8 @@ router.put('/update/:userId', async (req, res) => {
     if (hasEmail) return res.status(404).send('Email is taken')
 
     let hashedPassword
-    if(password){
-        hashedPassword = bycrptjs.hashSync(password, 10)
+    if (password) {
+      hashedPassword = bycrptjs.hashSync(password, 10)
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -58,6 +58,18 @@ router.put('/update/:userId', async (req, res) => {
     )
     const { password: pass, ...rest } = updatedUser._doc
     res.status(200).send(rest)
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+})
+
+router.delete('/delete/:userId', async (req, res) => {
+  try {
+    if (req.user.id !== req.params.userId) {
+      return res.status(403).send('You are not allowed to update this user')
+    }
+    await User.findByIdAndDelete(req.params.userId)
+    res.status(200).send('User has been deleted')
   } catch (err) {
     res.status(500).send(err.message)
   }
