@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser'
 import { verifyToken } from './middleware/verifyToken.js'
 import authRouter from './routes/auth.js'
 import userRouter from './routes/users.js'
+import todoRouter from './routes/todo.js'
+import listRouter from './routes/lists.js'
 
 dotenv.config()
 
@@ -34,3 +36,5 @@ mongoose
 
 app.use('/auth', authRouter)
 app.use('/users', verifyToken, userRouter)
+app.use('/todos', verifyToken, todoRouter)
+app.use('/lists', verifyToken, listRouter)
