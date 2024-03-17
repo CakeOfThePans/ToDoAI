@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 
 const todoSchema = new mongoose.Schema({
-    userId: {
+    listId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'List',
         required: true
     },
     task: {

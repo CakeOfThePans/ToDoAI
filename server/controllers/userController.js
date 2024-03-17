@@ -1,3 +1,5 @@
+import { List } from '../models/list.js'
+import { Todo } from '../models/todo.js'
 import { User, validateUser } from '../models/user.js'
 import bycrptjs from 'bcryptjs'
 
@@ -11,9 +13,6 @@ export const updateUser = async (req, res) => {
     }
 
     const { username, email, password } = req.body
-    if (!password) {
-      req.body.password = 'dummypass'
-    }
 
     const { error } = validateUser(req.body)
     if (error) {
@@ -65,7 +64,13 @@ export const deleteUser = async (req, res) => {
     if (req.user.id !== req.params.userId) {
       return res.status(403).send('You are not allowed to update this user')
     }
-    await User.findByIdAndDelete(req.params.userId)
+    const user = await User.findByIdAndDelete(req.params.userId)
+    const lists = await List.find({userId: user._id})
+    for(const list of lists){
+      //delete todos then the list
+      await Todo.deleteMany({listId: list._id})
+      await List.findByIdAndDelete(list._id)
+    }
     res.status(200).send('User has been deleted')
   } catch (err) {
     res.status(500).send(err.message)

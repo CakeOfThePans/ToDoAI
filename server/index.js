@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 import { verifyToken } from './middleware/verifyToken.js'
 import authRouter from './routes/auth.js'
 import userRouter from './routes/users.js'
-import todoRouter from './routes/todo.js'
+import todoRouter from './routes/todos.js'
 import listRouter from './routes/lists.js'
 
 dotenv.config()
