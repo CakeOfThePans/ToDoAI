@@ -1,9 +1,9 @@
-import { Alert, Button, Spinner, TextInput } from "flowbite-react"
-import React, { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
-import { useDispatch } from "react-redux"
-import { signInSuccess } from "../redux/user/userSlice"
+import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../redux/userSlice'
 
 export default function SignIn() {
   const [formData, setFormData] = useState({})
@@ -20,12 +20,12 @@ export default function SignIn() {
       setLoading(true)
       setErrorMessage(null)
       const res = await axios.post(
-        "http://localhost:3000/auth/sign-in",
+        'http://localhost:3000/auth/sign-in',
         formData
       )
       if (res.status === 200) {
-        dispatch(signInSuccess(res.data))
-        navigate("/")
+        dispatch(setUser(res.data))
+        navigate('/')
       }
     } catch (err) {
       setLoading(false)
@@ -56,7 +56,7 @@ export default function SignIn() {
               <span className="pl-3">Loading...</span>
             </>
           ) : (
-            "Sign In"
+            'Sign In'
           )}
         </Button>
       </form>

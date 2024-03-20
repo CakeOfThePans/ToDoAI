@@ -1,7 +1,7 @@
 import { Avatar, Button, Dropdown, Navbar } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { signOutSuccess } from '../redux/user/userSlice'
+import { removeUser } from '../redux/userSlice'
 import axios from 'axios'
 
 export default function Header() {
@@ -10,16 +10,16 @@ export default function Header() {
   const handleSignout = async () => {
     try {
       const res = await axios.post(`http://localhost:3000/auth/sign-out`)
-      dispatch(signOutSuccess())
+      dispatch(removeUser())
     } catch (err) {
       console.log(err)
     }
   }
   return (
-    <Navbar className="border-b-2">
+    <Navbar className='bg-inherit'>
       <Link
         to="/"
-        className="self-center whitespace-nowrap text-xl font-semibold"
+        className="self-center whitespace-nowrap text-xl font-semibold "
       >
         <div className="px-2 py-1">ToDoAI</div>
       </Link>

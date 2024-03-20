@@ -2,7 +2,9 @@ import { Alert, Button, Modal, TextInput } from 'flowbite-react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
-import { updateSuccess, deleteUserSuccess, signOutSuccess } from '../redux/user/userSlice'
+import {
+  setUser, removeUser
+} from '../redux/userSlice'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
@@ -29,7 +31,7 @@ export default function DashProfile() {
         `http://localhost:3000/users/update/${currentUser._id}`,
         formData
       )
-      dispatch(updateSuccess(res.data))
+      dispatch(setUser(res.data))
       setUserUpdateSuccess('User updated successfully')
       setFormData({ ...formData, password: '' })
     } catch (err) {
@@ -43,21 +45,16 @@ export default function DashProfile() {
       const res = await axios.delete(
         `http://localhost:3000/users/delete/${currentUser._id}`
       )
-      await axios.post(
-        `http://localhost:3000/auth/sign-out`
-      )
-      dispatch(deleteUserSuccess())
-      dispatch(signOutSuccess())
+      await axios.post(`http://localhost:3000/auth/sign-out`)
+      dispatch(removeUser())
     } catch (err) {
       setErrorMessage(err.response.data)
     }
   }
   const handleSignout = async () => {
     try {
-      const res = await axios.post(
-        `http://localhost:3000/auth/sign-out`
-      )
-      dispatch(signOutSuccess())
+      const res = await axios.post(`http://localhost:3000/auth/sign-out`)
+      dispatch(removeUser())
     } catch (err) {
       console.log(err)
     }
