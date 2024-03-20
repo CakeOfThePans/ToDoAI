@@ -8,7 +8,7 @@ import {
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
-export default function DashProfile() {
+export default function Profile() {
   const { currentUser } = useSelector((state) => state.user)
   const [errorMessage, setErrorMessage] = useState(null)
   const [userUpdateSuccess, setUserUpdateSuccess] = useState(null)
