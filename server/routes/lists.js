@@ -9,7 +9,7 @@ import {
 
 const router = express.Router()
 
-router.get('/', getLists)
+router.get('/:userId', getLists)
 router.get('/:listId', getList)
 router.post('/create', createList)
 router.put('/:listId', updateListName)

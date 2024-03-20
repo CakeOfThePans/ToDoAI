@@ -3,7 +3,7 @@ import { Todo } from '../models/todo.js'
 
 export const getLists = async (req, res) => {
     try{
-        const lists = await List.find({ userId: req.user.id })
+        const lists = await List.find({ userId: req.params.userId })
         res.send(lists);
     }
     catch(err){
