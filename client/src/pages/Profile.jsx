@@ -42,7 +42,7 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     setShowModal(false)
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `http://localhost:3000/users/delete/${currentUser._id}`
       )
       await axios.post(`http://localhost:3000/auth/sign-out`)
@@ -53,16 +53,16 @@ export default function Profile() {
   }
   const handleSignout = async () => {
     try {
-      const res = await axios.post(`http://localhost:3000/auth/sign-out`)
+      await axios.post(`http://localhost:3000/auth/sign-out`)
       dispatch(removeUser())
     } catch (err) {
       console.log(err)
     }
   }
   return (
-    <div className="max-w-lg mx-auto p-3 w-full">
+      <div className="mx-auto my-auto p-3 w-1/2">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
         <TextInput
           type="text"
           id="username"
