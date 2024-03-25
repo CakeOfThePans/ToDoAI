@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../redux/userSlice'
+import { setList } from '../redux/listSlice'
 
 export default function SignIn() {
   const [formData, setFormData] = useState({})
@@ -25,6 +26,7 @@ export default function SignIn() {
       )
       if (res.status === 200) {
         dispatch(setUser(res.data))
+        dispatch(setList(res.data.defaultList))
         navigate('/')
       }
     } catch (err) {

@@ -13,16 +13,18 @@ axios.defaults.withCredentials = true
 
 export default function App() {
   return (
-      <BrowserRouter>
-        <Header />
-          <Routes>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/" element={<Todos />} />
-            </Route>
-          </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Header />
+      <div className='pt-16 h-full'>
+        <Routes>
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/" element={<Todos />} />
+          </Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
   )
 }

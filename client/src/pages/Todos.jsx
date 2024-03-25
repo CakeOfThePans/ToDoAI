@@ -1,14 +1,11 @@
-import Lists from '../components/Lists'
-import TodoList from '../components/TodoList'
-import { useSelector } from 'react-redux'
+import TodoLists from '../components/TodoLists'
+import TodoItems from '../components/TodoItems'
 
 export default function Todos() {
-  const { currentList } = useSelector((state) => state.list)
   return (
-    <div className='flex'>
-      <div className=''>
-        {currentList ? <TodoList /> : <Lists />}
-      </div>
+    <div className='flex gap-4 h-full'>
+      <TodoLists />
+      <TodoItems />
       {/* TodoCalendar */}
     </div>
   )
