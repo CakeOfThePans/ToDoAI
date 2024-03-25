@@ -27,13 +27,13 @@ export default function Header() {
     }
   }
   return (
-    <Navbar className="w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 px-3 py-3" fluid>
+    <Navbar className="fixed w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 px-3 py-3" fluid>
       <Link to="/" className="flex items-center gap-3">
         <HiBadgeCheck className="size-6" />
         <span className="whitespace-nowrap text-xl font-semibold">ToDoAI</span>
       </Link>
       <div className="flex items-center gap-3">
-        <Button color="gray" onClick={() => dispatch(toggleTheme())}>
+        <Button color="light" onClick={() => dispatch(toggleTheme())}>
           {theme === 'light' ? <HiSun /> : <HiMoon />}
         </Button>
         {currentUser ? (
@@ -66,7 +66,7 @@ export default function Header() {
           </Dropdown>
         ) : (
           <Link to="/sign-in">
-            <Button color="gray">Sign In</Button>
+            <Button color="light">Sign In</Button>
           </Link>
         )}
       </div>
