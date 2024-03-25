@@ -1,4 +1,5 @@
 import { User, validateUser } from '../models/user.js'
+import { List } from '../models/list.js'
 import bycrptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -31,8 +32,17 @@ export const signUp = async (req, res) => {
       email,
       password: hashedPassword,
     })
-
     user = await user.save()
+
+    let defaultList = new List({
+      userId: user._id,
+      name: 'General',
+      order: 1
+    })
+    defaultList = await defaultList.save()
+    user.defaultList = defaultList._id
+    await user.save()
+
     res.send('Signup successful')
   } catch (err) {
     res.status(500).send(err.message)

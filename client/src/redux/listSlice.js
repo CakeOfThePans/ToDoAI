@@ -10,13 +10,10 @@ const listSlice = createSlice({
   reducers: {
     setList: (state, action) => {
       state.currentList = action.payload
-    },
-    removeList: (state) => {
-      state.currentList = null
     }
   }
 })
 
-export const { setList, removeList } = listSlice.actions
+export const { setList } = listSlice.actions
 
 export default listSlice.reducer

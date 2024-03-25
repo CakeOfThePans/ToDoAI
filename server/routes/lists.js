@@ -5,6 +5,7 @@ import {
   createList,
   updateListName,
   deleteList,
+  changeListOrder,
 } from '../controllers/listController.js'
 
 const router = express.Router()
@@ -12,6 +13,7 @@ const router = express.Router()
 router.get('/:userId', getLists)
 router.get('/:listId', getList)
 router.post('/create', createList)
+router.post('/changeListOrder', changeListOrder)
 router.put('/:listId', updateListName)
 router.delete('/:listId', deleteList)
 
