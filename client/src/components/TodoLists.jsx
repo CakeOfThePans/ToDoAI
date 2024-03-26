@@ -60,7 +60,6 @@ export default function TodoLists() {
         name: newList,
       })
       setNewList('')
-      // setLists([...lists, res.data])
       fetchData()
     } catch (err) {
       console.log(err)
@@ -70,10 +69,8 @@ export default function TodoLists() {
   const handleEdit = async (e) => {
     e.preventDefault()
     try {
-      console.log(editing)
-      console.log(editingList)
       await axios.put(`http://localhost:3000/lists/${editing}`, {
-        name: editingList
+        name: editingList,
       })
       setEditingList('')
       setEditing(null)
@@ -86,10 +83,6 @@ export default function TodoLists() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/lists/${id}`)
-      // setLists([
-      //   ...lists.slice(0, res.data.order - 1),
-      //   ...lists.slice(res.data.order),
-      // ])
       fetchData()
     } catch (err) {
       console.log(err)
@@ -146,48 +139,49 @@ export default function TodoLists() {
                 onClick={handleClick}
                 key={list._id}
               >
-                <form onSubmit={handleEdit}>
-                  <TextInput
-                    type="text"
-                    value={editingList}
-                    className={`w-full ${editing === list._id ? '' : 'hidden'}`}
-                    ref={(el) => (editingRef.current[list._id] = el)}
-                    onChange={handleEditingListChange}
-                    onBlur={() => {
-                      setEditingList('')
-                      setEditing(null)
-                    }}
-                  />
-                </form>
-                <div
-                  className={`flex justify-between items-center ${
-                    editing === list._id ? 'hidden' : ''
-                  }`}
-                  id={list._id}
-                >
-                  <span className="truncate" id={list._id}>
-                    {list.name}
-                  </span>
-                  {list._id !== currentUser.defaultList && (
-                    <Dropdown
-                      inline
-                      arrowIcon={false}
-                      label={<HiDotsVertical />}
-                    >
-                      <DropdownItem
-                        onClick={() => {
-                          setEditing(list._id)
-                          setEditingList(lists[list.order - 1].name)
-                        }}
+                {editing === list._id ? (
+                  <form onSubmit={handleEdit}>
+                    <TextInput
+                      type="text"
+                      value={editingList}
+                      className={'w-full'}
+                      ref={(el) => (editingRef.current[list._id] = el)}
+                      onChange={handleEditingListChange}
+                      onBlur={() => {
+                        setEditingList('')
+                        setEditing(null)
+                      }}
+                    />
+                  </form>
+                ) : (
+                  <div
+                    className={'flex justify-between items-center'}
+                    id={list._id}
+                  >
+                    <span className="truncate" id={list._id}>
+                      {list.name}
+                    </span>
+                    {list._id !== currentUser.defaultList && (
+                      <Dropdown
+                        inline
+                        arrowIcon={false}
+                        label={<HiDotsVertical />}
                       >
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem onClick={() => handleDelete(list._id)}>
-                        Delete
-                      </DropdownItem>
-                    </Dropdown>
-                  )}
-                </div>
+                        <DropdownItem
+                          onClick={() => {
+                            setEditing(list._id)
+                            setEditingList(lists[list.order - 1].name)
+                          }}
+                        >
+                          Edit
+                        </DropdownItem>
+                        <DropdownItem onClick={() => handleDelete(list._id)}>
+                          Delete
+                        </DropdownItem>
+                      </Dropdown>
+                    )}
+                  </div>
+                )}
               </li>
             )
           })}
