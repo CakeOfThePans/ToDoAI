@@ -34,7 +34,7 @@ export const createTodo = async (req, res) => {
 export const updateTodo = async (req, res) => {
     try{
         const todo = await Todo.findByIdAndUpdate(req.params.todoId, req.body, {new: true})
-        return res.status(200).send(todo)
+        return res.send(todo)
     }
     catch(err){
         res.status(500).send(err.message)

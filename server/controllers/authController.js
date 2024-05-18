@@ -1,6 +1,6 @@
 import { User, validateUser } from '../models/user.js'
 import { List } from '../models/list.js'
-import bycrptjs from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 export const signUp = async (req, res) => {
@@ -19,13 +19,14 @@ export const signUp = async (req, res) => {
     const { username, email, password } = req.body
     //check that the username is not taken
     const hasUsername = await User.findOne({ username })
-    if (hasUsername) return res.status(404).send('Username is taken')
+    if (hasUsername) return res.status(409).send('Username is taken')
 
     //check that the email is not taken
     const hasEmail = await User.findOne({ email })
-    if (hasEmail) return res.status(404).send('Email is taken')
+    if (hasEmail) return res.status(409).send('Email is taken')
 
-    const hashedPassword = bycrptjs.hashSync(password, 10)
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt)
 
     let user = new User({
       username,
@@ -63,7 +64,7 @@ export const signIn = async (req, res) => {
     if (!user) {
       return res.status(404).send('Invalid email or password')
     }
-    const validPassword = bycrptjs.compareSync(password, user.password)
+    const validPassword = bcrypt.compareSync(password, user.password)
     if (!validPassword) {
       return res.status(404).send('Invalid email or password')
     }
@@ -71,7 +72,6 @@ export const signIn = async (req, res) => {
     const { password: pass, ...rest } = user._doc
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
     res
-      .status(200)
       .cookie('access_token', token, {
         httpOnly: false,
       })
@@ -83,7 +83,7 @@ export const signIn = async (req, res) => {
 
 export const signOut = (req, res) => {
   try {
-    res.clearCookie('access_token').status(200).send('User has been signed out')
+    res.clearCookie('access_token').send('User has been signed out')
   } catch (err) {
     res.status(500).send(err.message)
   }

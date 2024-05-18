@@ -5,6 +5,7 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import {
   setUser, removeUser
 } from '../redux/userSlice'
+import { setList } from '../redux/listSlice'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
@@ -28,7 +29,7 @@ export default function Profile() {
     setErrorMessage(null)
     try {
       const res = await axios.put(
-        `http://localhost:3000/users/update/${currentUser._id}`,
+        `/api/users/update/${currentUser._id}`,
         formData
       )
       dispatch(setUser(res.data))
@@ -43,18 +44,20 @@ export default function Profile() {
     setShowModal(false)
     try {
       await axios.delete(
-        `http://localhost:3000/users/delete/${currentUser._id}`
+        `/api/users/delete/${currentUser._id}`
       )
-      await axios.post(`http://localhost:3000/auth/sign-out`)
+      await axios.post(`/api/auth/sign-out`)
       dispatch(removeUser())
+      dispatch(setList(null))
     } catch (err) {
       setErrorMessage(err.response.data)
     }
   }
   const handleSignout = async () => {
     try {
-      await axios.post(`http://localhost:3000/auth/sign-out`)
+      await axios.post(`/api/auth/sign-out`)
       dispatch(removeUser())
+      dispatch(setList(null))
     } catch (err) {
       console.log(err)
     }

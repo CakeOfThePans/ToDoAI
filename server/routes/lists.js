@@ -11,7 +11,7 @@ import {
 const router = express.Router()
 
 router.get('/:userId', getLists)
-router.get('/:listId', getList)
+router.get('/listName/:listId', getList)
 router.post('/create', createList)
 router.post('/changeListOrder', changeListOrder)
 router.put('/:listId', updateListName)

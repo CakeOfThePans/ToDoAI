@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setList } from '../redux/listSlice'
-import { Button, Dropdown, DropdownItem, TextInput } from 'flowbite-react'
+import { Dropdown, DropdownItem, TextInput } from 'flowbite-react'
 import { HiDotsVertical } from 'react-icons/hi'
 
 export default function TodoLists() {
@@ -30,7 +30,7 @@ export default function TodoLists() {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/lists/${currentUser._id}`
+        `/api/lists/${currentUser._id}`
       )
       setLists(res.data)
     } catch (err) {
@@ -56,7 +56,7 @@ export default function TodoLists() {
     e.preventDefault()
     try {
       if (!newList) return
-      await axios.post('http://localhost:3000/lists/create', {
+      await axios.post('/api/lists/create', {
         name: newList,
       })
       setNewList('')
@@ -69,7 +69,7 @@ export default function TodoLists() {
   const handleEdit = async (e) => {
     e.preventDefault()
     try {
-      await axios.put(`http://localhost:3000/lists/${editing}`, {
+      await axios.put(`/api/lists/${editing}`, {
         name: editingList,
       })
       setEditingList('')
@@ -82,7 +82,7 @@ export default function TodoLists() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/lists/${id}`)
+      await axios.delete(`/api/lists/${id}`)
       fetchData()
     } catch (err) {
       console.log(err)
@@ -92,12 +92,10 @@ export default function TodoLists() {
   return (
     <div className="flex flex-col bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 w-64">
       <div className="flex flex-col overflow-y-auto p-4">
-        <ul className="list-none border-b border-gray-200 dark:border-gray-700 space-y-2 pb-2">
+        <ul className="list-none border-b border-gray-200 dark:border-gray-700 gap-2 pb-2">
           <li
             className={`cursor-pointer ${
-              currentList === 'Today'
-                ? 'opacity-100 bg-gray-200'
-                : 'opacity-70 hover:opacity-100 hover:bg-gray-50'
+              currentList === 'Today' ? 'bg-gray-200' : 'hover:bg-gray-50'
             } rounded-xl p-2 transition-all flex justify-between items-center group truncate`}
             onClick={handleClick}
             id="Today"
@@ -106,9 +104,7 @@ export default function TodoLists() {
           </li>
           <li
             className={`cursor-pointer ${
-              currentList === 'Tomorrow'
-                ? 'opacity-100 bg-gray-200'
-                : 'opacity-70 hover:opacity-100 hover:bg-gray-50'
+              currentList === 'Tomorrow' ? 'bg-gray-200' : 'hover:bg-gray-50'
             } rounded-xl p-2 transition-all flex justify-between items-center group truncate`}
             onClick={handleClick}
             id="Tomorrow"
@@ -117,9 +113,7 @@ export default function TodoLists() {
           </li>
           <li
             className={`cursor-pointer ${
-              currentList === 'Next 7 Days'
-                ? 'opacity-100 bg-gray-200'
-                : 'opacity-70 hover:opacity-100 hover:bg-gray-50'
+              currentList === 'Next 7 Days' ? 'bg-gray-200' : 'hover:bg-gray-50'
             } rounded-xl p-2 transition-all flex justify-between items-center group truncate`}
             onClick={handleClick}
             id="Next 7 Days"
@@ -127,17 +121,15 @@ export default function TodoLists() {
             Next 7 Days
           </li>
         </ul>
-        <ul className="list-none mt-2 space-y-2">
+        <div className="mt-2 gap-2 flex flex-col">
           {lists.map((list) => {
             return (
-              <li
+              <div value={list} key={list._id}
                 className={`cursor-pointer ${
-                  currentList === list._id
-                    ? 'opacity-100 bg-gray-200'
-                    : 'opacity-70 hover:opacity-100 hover:bg-gray-50'
-                } rounded-xl p-2 transition-all`}
+                  currentList === list._id ? 'bg-gray-200' : 'hover:bg-gray-50'
+                } rounded-xl p-2`}
                 onClick={handleClick}
-                key={list._id}
+                // key={list._id}
               >
                 {editing === list._id ? (
                   <form onSubmit={handleEdit}>
@@ -182,22 +174,22 @@ export default function TodoLists() {
                     )}
                   </div>
                 )}
-              </li>
+              </div>
             )
           })}
-        </ul>
+        </div>
       </div>
-      <form className="flex px-4 pb-4" onSubmit={handleSubmit}>
+      <form className="px-4 pb-4" onSubmit={handleSubmit}>
         <TextInput
           type="text"
           placeholder="Create List"
           value={newList}
-          className="w-60"
+          className="w-full"
           onChange={handleNewListChange}
+          onBlur={() => {
+            setNewList('')
+          }}
         />
-        <Button color="light" type="submit" className="ml-2">
-          Add
-        </Button>
       </form>
     </div>
   )

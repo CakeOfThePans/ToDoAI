@@ -15,7 +15,7 @@ export const getLists = async (req, res) => {
 export const getList = async (req, res) => {
   try {
     const list = await List.findById(req.params.listId)
-    res.send(list)
+    res.send(list.name)
   } catch (err) {
     res.status(500).send(err.message)
   }
@@ -53,12 +53,9 @@ export const updateListName = async (req, res) => {
     if (!currentList) {
       return res.status(400).send('Invalid list ID')
     }
-    if (req.user.id !== currentList.userId.toString()) {
-      return res.status(401).send('Invalid credentials')
-    }
     currentList.name = req.body.name
     await currentList.save()
-    return res.status(200).send(currentList)
+    return res.send(currentList)
   } catch (err) {
     res.status(500).send(err.message)
   }
@@ -70,9 +67,6 @@ export const deleteList = async (req, res) => {
     if (!currentList) {
       return res.status(400).send('Invalid List ID')
     }
-    if (req.user.id !== currentList.userId.toString()) {
-      return res.status(401).send('Invalid credentials')
-    }
     await Todo.deleteMany({ listId: req.params.listId })
     await List.findByIdAndDelete(req.params.listId)
     //decrement all lists with higher order
@@ -80,7 +74,7 @@ export const deleteList = async (req, res) => {
       { userId: req.user.id, order: { $gt: currentList.order } },
       { $inc: { order: -1 } }
     )
-    res.status(200).send(currentList)
+    res.send(currentList)
   } catch (err) {
     res.status(500).send(err.message)
   }

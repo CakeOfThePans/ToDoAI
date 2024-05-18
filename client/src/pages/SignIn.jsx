@@ -21,7 +21,7 @@ export default function SignIn() {
       setLoading(true)
       setErrorMessage(null)
       const res = await axios.post(
-        'http://localhost:3000/auth/sign-in',
+        '/api/auth/sign-in',
         formData
       )
       if (res.status === 200) {

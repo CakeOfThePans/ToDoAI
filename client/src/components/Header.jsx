@@ -11,6 +11,7 @@ import {
 } from 'flowbite-react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeUser } from '../redux/userSlice'
+import { setList } from '../redux/listSlice'
 import { toggleTheme } from '../redux/themeSlice'
 import axios from 'axios'
 
@@ -20,8 +21,9 @@ export default function Header() {
   const dispatch = useDispatch()
   const handleSignout = async () => {
     try {
-      await axios.post(`http://localhost:3000/auth/sign-out`)
+      await axios.post(`/api/auth/sign-out`)
       dispatch(removeUser())
+      dispatch(setList(null))
     } catch (err) {
       console.log(err)
     }
