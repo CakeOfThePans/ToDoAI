@@ -13,6 +13,11 @@ const listSchema = new mongoose.Schema({
     order: {
         type: Number,
         required: true
+    },
+    count: {
+        type: Number,
+        required: true,
+        default: 0
     }
 })
 

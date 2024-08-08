@@ -15,13 +15,19 @@ const todoSchema = new mongoose.Schema({
     },
     completed: {
         type: Boolean,
+        required: true,
         default: false
     },
     queue: {
         type: Boolean,
+        required: true,
         default: false
     },
-    //due date/priority later
+    order: {
+        type: Number,
+        required: true
+    }
+    //due date/time/priority later
 })
 
 export const Todo = mongoose.model('Todo', todoSchema)

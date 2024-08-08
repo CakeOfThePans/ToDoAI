@@ -34,7 +34,7 @@ mongoose
     console.log(err)
   })
 
-app.use('/auth', authRouter)
-app.use('/users', verifyToken, userRouter)
-app.use('/todos', verifyToken, todoRouter)
-app.use('/lists', verifyToken, listRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/users', verifyToken, userRouter)
+app.use('/api/todos', verifyToken, todoRouter)
+app.use('/api/lists', verifyToken, listRouter)

@@ -19,11 +19,11 @@ export const signUp = async (req, res) => {
     const { username, email, password } = req.body
     //check that the username is not taken
     const hasUsername = await User.findOne({ username })
-    if (hasUsername) return res.status(409).send('Username is taken')
+    if (hasUsername) return res.status(400).send('Username is taken')
 
     //check that the email is not taken
     const hasEmail = await User.findOne({ email })
-    if (hasEmail) return res.status(409).send('Email is taken')
+    if (hasEmail) return res.status(400).send('Email is taken')
 
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt)
@@ -37,7 +37,7 @@ export const signUp = async (req, res) => {
 
     let defaultList = new List({
       userId: user._id,
-      name: 'General',
+      name: 'Inbox',
       order: 1
     })
     defaultList = await defaultList.save()

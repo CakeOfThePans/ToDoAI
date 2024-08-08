@@ -4,7 +4,7 @@ import { getTodos, createTodo, updateTodo, deleteTodo } from '../controllers/tod
 const router = express.Router()
 
 router.get('/:listId', getTodos)
-router.post('/create', createTodo)
+router.post('/', createTodo)
 router.put('/:todoId', updateTodo)
 router.delete('/:todoId', deleteTodo)
 

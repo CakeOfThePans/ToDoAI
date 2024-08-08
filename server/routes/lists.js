@@ -10,10 +10,10 @@ import {
 
 const router = express.Router()
 
-router.get('/:userId', getLists)
-router.get('/listName/:listId', getList)
-router.post('/create', createList)
-router.post('/changeListOrder', changeListOrder)
+router.get('/', getLists)
+router.get('/:listId', getList)
+router.post('/', createList)
+router.post('/changeListOrder/:listId', changeListOrder)
 router.put('/:listId', updateListName)
 router.delete('/:listId', deleteList)
 
