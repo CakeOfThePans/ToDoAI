@@ -1,7 +1,87 @@
+import { User } from '../models/user.js'
 import { List } from '../models/list.js'
 import { Todo } from '../models/todo.js'
 
 export const getTodos = async (req, res) => {
+	try {
+        const { today, upcoming, inQueue, showInQueueOnly, hideCompleted, showOverdueOnly, task } = req.query
+        const query = {
+            userId: req.user.id
+        }
+
+        //list page
+        if(today === "true") {
+            const startOfDay = new Date()
+            startOfDay.setHours(0, 0, 0, 0)
+            const endOfDay = new Date()
+            endOfDay.setHours(23, 59, 59, 999)
+
+            query.date = { $gte: startOfDay, $lte: endOfDay }
+        }
+        else if(upcoming === "true") query.date = { $gte: new Date() }
+        else if(inQueue === "true") query.queue = true
+
+        //extra query
+        if(showInQueueOnly === "true") query.queue = true
+        if(hideCompleted === "true") query.completed = false
+        if(showOverdueOnly === "true") query.date = { $lt: new Date() }
+        if(task) query.task = { $regex: task, $options: 'i' }
+
+		const todos = await Todo.find(query).sort({
+            listId: 1,
+            order: 1
+		})
+		res.send(todos)
+	} catch (err) {
+		res.status(500).send(err.message)
+	}
+}
+
+export const getDefaultLists = async (req, res) => {
+	try {
+        const defaultLists = ['Inbox', 'Today', 'Upcoming', 'In Queue']
+        const lists = []
+        for(const list of defaultLists){
+            if(list === "Inbox"){
+                const user = await User.findById(req.user.id)
+                const inbox = await List.findById(user.defaultList)
+                lists.push({
+                    id: user.defaultList,
+                    name: list,
+                    count: inbox.count
+                })
+            }
+            else if(list === "Today") {
+                const startOfDay = new Date()
+                startOfDay.setHours(0, 0, 0, 0)
+                const endOfDay = new Date()
+                endOfDay.setHours(23, 59, 59, 999)
+    
+                lists.push({
+                    name: list,
+                    count: await Todo.countDocuments({ date: { $gte: startOfDay, $lte: endOfDay } })
+                })
+            }
+            else if(list === "Upcoming"){
+                lists.push({
+                    name: list,
+                    count: await Todo.countDocuments({ date: { $gte: new Date() } })
+                })
+            }
+            else if(list === "In Queue") {
+                lists.push({
+                    name: list,
+                    count: await Todo.countDocuments({ queue: true })
+                })
+            }
+        } 
+		res.send(lists)
+	} catch (err) {
+		res.status(500).send(err.message)
+	}
+}
+
+export const getTodosFromList = async (req, res) => {
 	try {
         const list = await List.findById(req.params.listId)
         if(!list){
@@ -11,7 +91,16 @@ export const getTodos = async (req, res) => {
             return res.status(400).send("User does not have access to this list")
         }
 
-		const todos = await Todo.find({ listId: req.params.listId }).sort({
+        const { showInQueueOnly, hideCompleted, showOverdueOnly, task } = req.query
+        const query = {
+            listId: req.params.listId
+        }
+        if(showInQueueOnly === "true") query.queue = true
+        if(hideCompleted === "true") query.completed = false
+        if(showOverdueOnly === "true") query.date = { $lt: new Date() }
+        if(task) query.task = { $regex: task, $options: 'i' }
+
+		const todos = await Todo.find(query).sort({
 			order: 1,
 		})
 		res.send(todos)
@@ -35,12 +124,14 @@ export const createTodo = async (req, res) => {
 		list = await list.save()
 
 		let todo = new Todo({
+            userId: req.user.id,
             listId: req.body.listId,
             task: req.body.task,
-            notes: req.body.notes,
             completed: false,
             queue: false,
-            order: list.count
+            order: list.count,
+            duration: req.body.duration,
+            date: req.body.date
         })
 		todo = await todo.save()
 		res.send(todo)

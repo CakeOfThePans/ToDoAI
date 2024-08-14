@@ -12,12 +12,10 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { removeUser } from '../redux/userSlice'
 import { setList } from '../redux/listSlice'
-import { toggleTheme } from '../redux/themeSlice'
 import axios from 'axios'
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user)
-  const { theme } = useSelector((state) => state.theme)
   const dispatch = useDispatch()
   const handleSignout = async () => {
     try {
@@ -29,15 +27,12 @@ export default function Header() {
     }
   }
   return (
-    <Navbar className="fixed w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 px-3 py-3" fluid>
+    <Navbar className="z-10 fixed w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 px-3 py-3" fluid>
       <Link to="/" className="flex items-center gap-3">
         <HiBadgeCheck className="size-6" />
         <span className="whitespace-nowrap text-xl font-semibold">ToDoAI</span>
       </Link>
       <div className="flex items-center gap-3">
-        <Button color="light" onClick={() => dispatch(toggleTheme())}>
-          {theme === 'light' ? <HiSun /> : <HiMoon />}
-        </Button>
         {currentUser ? (
           <Dropdown
             arrowIcon={false}
@@ -45,7 +40,8 @@ export default function Header() {
             label={
               <Avatar
                 alt="user"
-                img="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"
+                src="../assets/profile.png"
+                rounded
               />
             }
           >

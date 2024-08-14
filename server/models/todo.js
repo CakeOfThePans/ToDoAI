@@ -1,6 +1,11 @@
 import mongoose from 'mongoose'
 
 const todoSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     listId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'List',
@@ -9,9 +14,6 @@ const todoSchema = new mongoose.Schema({
     task: {
         type: String,
         required: true,
-    },
-    notes: {
-        type: String,
     },
     completed: {
         type: Boolean,
@@ -26,8 +28,14 @@ const todoSchema = new mongoose.Schema({
     order: {
         type: Number,
         required: true
+    },
+    duration: {
+        type: Number,
+        required: true
+    },
+    date: {
+        type: Date
     }
-    //due date/time/priority later
 })
 
 export const Todo = mongoose.model('Todo', todoSchema)
