@@ -3,9 +3,7 @@ import { Todo } from '../models/todo.js'
 
 export const getLists = async (req, res) => {
 	try {
-		const lists = await List.find({ userId: req.user.id }).sort({
-			order: 1,
-		})
+		const lists = await List.find({ userId: req.user.id }).sort({ order: 1 })
 		res.send(lists)
 	} catch (err) {
 		res.status(500).send(err.message)
@@ -39,8 +37,21 @@ export const createList = async (req, res) => {
 	}
 }
 
-export const changeListOrder = async (req, res) => {
+export const updateOrder = async (req, res) => {
 	try {
+		const { sourceIndex, destinationIndex } = req.body
+		const lists = await List.find({ userId: req.user.id }).sort({ order: 1 })
+
+		//reorder lists arr
+		const [movedList] = lists.splice(sourceIndex, 1)
+		lists.splice(destinationIndex, 0, movedList)
+
+		//update db
+		lists.forEach(async (list, index) => {
+			await List.findByIdAndUpdate(list._id, { order: index })
+		}) 
+		
+		res.send("Order updated")
 	} catch (err) {
 		res.status(500).send(err.message)
 	}

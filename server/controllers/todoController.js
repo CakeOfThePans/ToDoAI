@@ -119,10 +119,6 @@ export const createTodo = async (req, res) => {
             return res.status(400).send("User does not have access to this list")
         }
 
-		//add +1 to the list's count
-		list.count++
-		list = await list.save()
-
 		let todo = new Todo({
             userId: req.user.id,
             listId: req.body.listId,
@@ -134,19 +130,44 @@ export const createTodo = async (req, res) => {
             date: req.body.date
         })
 		todo = await todo.save()
+
+        //add +1 to the list's count
+		list.count++
+		list = await list.save()
+
 		res.send(todo)
 	} catch (err) {
 		res.status(500).send(err.message)
 	}
 }
 
-export const changeTodoOrder = async (req, res) => {
-    try {
-      
-    } catch (err) {
-      res.status(500).send(err.message)
-    }
-  }
+export const updateOrder = async (req, res) => {
+	try {
+        const list = await List.findById(req.params.listId)
+        if(!list){
+            return res.status(400).send("Invalid List ID")
+        }
+        if(list.userId != req.user.id){
+            return res.status(400).send("User does not have access to this list")
+        }
+
+		const { sourceIndex, destinationIndex } = req.body
+        const todos = await Todo.find({ listId: req.params.listId }).sort({ order: 1 })
+
+		//reorder todos arr
+		const [movedList] = todos.splice(sourceIndex, 1)
+		todos.splice(destinationIndex, 0, movedList)
+
+		//update db
+		todos.forEach(async (todo, index) => {
+			await Todo.findByIdAndUpdate(todo._id, { order: index })
+		}) 
+		
+		res.send("Order updated")
+	} catch (err) {
+		res.status(500).send(err.message)
+	}
+}
 
 export const updateTodo = async (req, res) => {
 	try {

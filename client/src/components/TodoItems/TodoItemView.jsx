@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { Button, TextInput, Tooltip } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import TodoItem from './TodoItem'
 import CreateItemForm from './CreateItemForm'
-import { BiCalendar, BiCheckCircle, BiSearchAlt2, BiTime } from 'react-icons/bi'
+import TodoItemHeader from './TodoItemHeader'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import axios from 'axios'
 
 export default function TodoItemView({
 	todos,
+	setTodos,
 	fetchData,
 	currentList,
 	listName,
@@ -21,7 +24,6 @@ export default function TodoItemView({
 	const [creating, setCreating] = useState(false)
 	const [editing, setEditing] = useState(null) //only one todo can be edited at a time
 	const inputRef = useRef(null)
-	const searchRef = useRef(null)
 
 	useEffect(() => {
 		//reset states when list changes
@@ -30,140 +32,80 @@ export default function TodoItemView({
 		setEditing(null)
 	}, [currentList])
 
-	useEffect(() => {
-		if(searching){
-			searchRef.current.focus()
+	const handleDragEnd = async (result) => {
+		if(!result.destination) return
+
+		const { source, destination } = result
+		if(source.index == destination.index) return
+
+		const items = Array.from(todos)
+		const [movedList] = items.splice(source.index, 1)
+		items.splice(destination.index, 0, movedList)
+		setTodos(items)
+
+		try{
+			await axios.post(`/api/todos/updateOrder/${currentList}`, {
+				sourceIndex: todos[source.index].order,	//based on actual todo order in case of filters
+				destinationIndex: todos[destination.index].order
+			})
+			fetchData() //refetch data in case anything is off (mainly for any header options)
 		}
-		//if searching is toggled off refetch data
-		else{
-			fetchData()
+		catch(err){
+			console.log(err)
 		}
-	}, [searching])
+	}
 
 	return (
 		<div className="flex flex-col bg-white border border-gray-200 w-96 m-4 rounded-xl">
-			<div className="flex items-center justify-between border-b px-4 py-4 shadow-sm h-16">
-				{searching ? (
-					<TextInput 
-						sizing="md"
-						placeholder='Search todos'
-						className='w-full mr-2'
-						onChange={(e) => {
-							fetchData(e.target.value)
-						}}
-						ref={searchRef}
-					/>
-				) : (
-					<span className="font-medium underline text-xl truncate"># {listName}</span>
-				)}
-				<div className="flex items-center gap-1">
-					<Tooltip
-						content="Search"
-						style="dark"
-						animation="duration-300"
-						arrow={false}
-						className="bg-gray-800 text-xs"
-					>
-						<div
-							className="hover:bg-gray-200 p-1 rounded-lg"
-							onClick={() => {
-								setSearching(!searching)
-							}}
+			<TodoItemHeader
+				listName={listName}
+				showInQueueOnly={showInQueueOnly}
+				setShowInQueueOnly={setShowInQueueOnly}
+				hideCompleted={hideCompleted}
+				setHideCompleted={setHideCompleted}
+				showOverdueOnly={showOverdueOnly}
+				setShowOverdueOnly={setShowOverdueOnly}
+				searching={searching}
+				setSearching={setSearching}
+				fetchData={fetchData}
+			/>
+			<DragDropContext onDragEnd={handleDragEnd}>
+				<Droppable droppableId="droppable">
+					{(provided) => (
+						<ul 
+							className="overflow-y-auto list-none my-2"
+							ref={provided.innerRef}
+							{...provided.droppableProps}
 						>
-							<BiSearchAlt2
-								size={22}
-								className={
-									"cursor-pointer text-gray-700" + 
-									(searching ? ' text-opacity-100' : ' text-opacity-50')
-								}
-							/>
-						</div>
-					</Tooltip>
-					<Tooltip
-						content="Show in queue todos only"
-						style="dark"
-						animation="duration-300"
-						arrow={false}
-						className="bg-gray-800 text-xs"
-					>
-						<div
-							className="hover:bg-gray-200 p-1 rounded-lg"
-							onClick={() => {
-								setShowInQueueOnly(!showInQueueOnly)
-							}}
-						>
-							<BiCalendar
-								size={22}
-								className={
-									'cursor-pointer text-gray-700' +
-									(showInQueueOnly ? ' text-opacity-100' : ' text-opacity-50')
-								}
-							/>
-						</div>
-					</Tooltip>
-					<Tooltip
-						content="Show completed todos"
-						style="dark"
-						animation="duration-300"
-						arrow={false}
-						className="bg-gray-800 text-xs"
-					>
-						<div
-							className="hover:bg-gray-200 p-1 rounded-lg"
-							onClick={() => {
-								setHideCompleted(!hideCompleted)
-							}}
-						>
-							<BiCheckCircle
-								size={22}
-								className={
-									'cursor-pointer text-gray-700' +
-									(hideCompleted ? ' text-opacity-50' : ' text-opacity-100')
-								}
-							/>
-						</div>
-					</Tooltip>
-					<Tooltip
-						content="Show overdue todos only"
-						style="dark"
-						animation="duration-300"
-						arrow={false}
-						className="bg-gray-800 text-xs"
-					>
-						<div
-							className="hover:bg-gray-200 p-1 rounded-lg"
-							onClick={() => {
-								setShowOverdueOnly(!showOverdueOnly)
-							}}
-						>
-							<BiTime
-								size={22}
-								className={
-									'cursor-pointer text-gray-700' +
-									(showOverdueOnly ? ' text-opacity-100' : ' text-opacity-50')
-								}
-							/>
-						</div>
-					</Tooltip>
-				</div>
-			</div>
-			<div className="flex flex-col overflow-y-auto">
-				<ul className="list-none my-2 space-y-1">
-					{todos.map((todo) => {
-						return (
-							<TodoItem
-								todo={todo}
-								fetchData={fetchData}
-								key={todo._id}
-								currentList={currentList}
-								editing={editing}
-								setEditing={setEditing}
-								inputRef={inputRef}
-							/>
-						)
-					})}
-				</ul>
-			</div>
+							{todos.map((todo, index) => {
+								return (
+									<Draggable key={todo._id} draggableId={todo._id} index={index}>
+										{(provided) => (
+											<div
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+												className='mb-1'
+											>
+												<TodoItem
+													todo={todo}
+													fetchData={fetchData}
+													key={todo._id}
+													currentList={currentList}
+													editing={editing}
+													setEditing={setEditing}
+													inputRef={inputRef}
+												/>
+											</div>
+										)}
+									</Draggable>
+								)
+							})}
+							{provided.placeholder}
+						</ul>
+						)}
+				</Droppable>
+			</DragDropContext>
 			{!defaultLists.includes(currentList) &&
 				(creating ? (
 					<CreateItemForm

@@ -52,6 +52,7 @@ export default function Todos() {
 			<TodoListView todos={todos} />
 			<TodoItemView
 				todos={todos}
+				setTodos={setTodos}
 				fetchData={fetchData}
 				currentList={currentList}
 				listName={listName}

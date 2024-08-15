@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Checkbox, Label, Tooltip } from 'flowbite-react'
+import { Checkbox, Label } from 'flowbite-react'
 import axios from 'axios'
 import EditItemForm from './EditItemForm'
-import { BiCalendarPlus, BiPencil, BiTrash } from 'react-icons/bi'
+import HoverOptions from './HoverOptions'
 
 export default function TodoItem({
 	todo,
@@ -40,7 +40,7 @@ export default function TodoItem({
 		try {
 			await axios.put(`/api/todos/${todo._id}`, {
 				completed: !completed,
-				queue: false
+				queue: false,
 			})
 			setCompleted(!completed)
 			setInQueue(false)
@@ -108,7 +108,7 @@ export default function TodoItem({
 					}}
 					ref={itemRef}
 				>
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 w-3/5">
 						<Checkbox
 							id="remember"
 							className="focus:outline-none focus:ring-0 text-black"
@@ -116,72 +116,26 @@ export default function TodoItem({
 							checked={completed}
 							onChange={handleToggleCompleted}
 						/>
-						<Label htmlFor="remember">{todo.task}</Label>
+						<Label htmlFor="remember" className='truncate text-wrap'>{todo.task}</Label>
 					</div>
 					{isHovered ? (
-						<div className="flex items-center gap-2">
-							{!completed && (
-								<Tooltip
-									content={
-										inQueue
-											? 'Remove from scheduling queue'
-											: 'Add to scheduling queue'
-									}
-									style="dark"
-									animation="duration-300"
-									arrow={false}
-									className="bg-gray-800 text-xs"
-								>
-									<div
-										className={
-											'hover:bg-gray-200 rounded-lg' +
-											(!inQueue && ' opacity-50')
-										}
-									>
-										<BiCalendarPlus size={21} onClick={handleToggleQueue} />
-									</div>
-								</Tooltip>
-							)}
-							{!completed && (
-								<Tooltip
-									content="Edit todo"
-									style="dark"
-									animation="duration-300"
-									arrow={false}
-									className="bg-gray-800 text-xs"
-								>
-									<div className="hover:bg-gray-200 rounded-lg">
-										<BiPencil
-											size={21}
-											onClick={() => {
-												setEditing(todo._id)
-												setIsHovered(false)
-											}}
-										/>
-									</div>
-								</Tooltip>
-							)}
-							<Tooltip
-								content="Delete todo"
-								style="dark"
-								animation="duration-300"
-								arrow={false}
-								className="bg-gray-800 text-xs"
-							>
-								<div className="hover:bg-gray-200 rounded-lg">
-									<BiTrash size={21} onClick={handleDelete} />
-								</div>
-							</Tooltip>
-						</div>
+						<HoverOptions
+							completed={completed}
+							inQueue={inQueue}
+							handleToggleQueue={handleToggleQueue}
+							setEditing={setEditing}
+							setIsHovered={setIsHovered}
+							handleDelete={handleDelete}
+							todo={todo}
+						/>
 					) : (
 						<div className="flex gap-2">
 							{todo.date && (
-								<span>{formatDateToMonthDay(new Date(todo.date))}</span>
+								<span className='text-nowrap'>{formatDateToMonthDay(new Date(todo.date))}</span>
 							)}
 							<span className="opacity-75">
 								{convertMinutesToTime(todo.duration)}
 							</span>
-							
 						</div>
 					)}
 				</div>
