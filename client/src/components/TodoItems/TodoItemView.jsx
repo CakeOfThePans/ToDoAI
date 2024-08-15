@@ -21,6 +21,7 @@ export default function TodoItemView({
 	const [creating, setCreating] = useState(false)
 	const [editing, setEditing] = useState(null) //only one todo can be edited at a time
 	const inputRef = useRef(null)
+	const searchRef = useRef(null)
 
 	useEffect(() => {
 		//reset states when list changes
@@ -28,6 +29,16 @@ export default function TodoItemView({
 		setCreating(false)
 		setEditing(null)
 	}, [currentList])
+
+	useEffect(() => {
+		if(searching){
+			searchRef.current.focus()
+		}
+		//if searching is toggled off refetch data
+		else{
+			fetchData()
+		}
+	}, [searching])
 
 	return (
 		<div className="flex flex-col bg-white border border-gray-200 w-96 m-4 rounded-xl">
@@ -40,6 +51,7 @@ export default function TodoItemView({
 						onChange={(e) => {
 							fetchData(e.target.value)
 						}}
+						ref={searchRef}
 					/>
 				) : (
 					<span className="font-medium underline text-xl truncate"># {listName}</span>

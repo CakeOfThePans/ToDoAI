@@ -112,7 +112,7 @@ export default function CreateItemForm({
 						Cancel
 					</Button>
 					<Button color="gray" className="w-full" onClick={handleSubmit}>
-						Submit
+						Create
 					</Button>
 				</div>
 			</form>

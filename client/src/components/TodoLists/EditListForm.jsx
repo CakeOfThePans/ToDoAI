@@ -45,7 +45,7 @@ export default function EditListForm({ list, setEditing, fetchData, inputRef }) 
 					Cancel
 				</Button>
 				<Button color="gray" className="w-full" onClick={handleEdit}>
-					Submit
+					Update
 				</Button>
 			</div>
 		</form>

@@ -111,7 +111,7 @@ export default function EditItemForm({
 					Cancel
 				</Button>
 				<Button color="gray" className="w-full" onClick={handleSubmit}>
-					Submit
+					Update
 				</Button>
 			</div>
 		</form>

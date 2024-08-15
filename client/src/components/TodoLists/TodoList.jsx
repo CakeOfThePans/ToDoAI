@@ -3,6 +3,8 @@ import { Dropdown, DropdownItem, Modal, Button } from 'flowbite-react'
 import { HiDotsHorizontal } from 'react-icons/hi'
 import axios from 'axios'
 import EditListForm from './EditListForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { setList } from '../../redux/listSlice'
 
 export default function TodoList({
 	list,
@@ -13,10 +15,12 @@ export default function TodoList({
 	setEditing,
 	inputRef
 }) {
+	const { currentUser } = useSelector((state) => state.user)
 	const [isHovered, setIsHovered] = useState(false)
 	const [isClicked, setIsClicked] = useState(false)
 	const dropdownRef = useRef(null)
 	const [showModal, setShowModal] = useState(false)
+	const dispatch = useDispatch()
 
 	const handleClickOutside = (e) => {
 		if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -41,6 +45,7 @@ export default function TodoList({
 			await axios.delete(`/api/lists/${list._id}`)
 			setShowModal(false)
 			setIsHovered(false)
+			if(currentList == list._id) dispatch(setList(currentUser.defaultList))
 			fetchData()
 		} catch (err) {
 			console.log(err)

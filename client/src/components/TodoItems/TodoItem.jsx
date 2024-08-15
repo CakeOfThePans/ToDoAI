@@ -175,12 +175,13 @@ export default function TodoItem({
 						</div>
 					) : (
 						<div className="flex gap-2">
-							<span className="opacity-75">
-								{convertMinutesToTime(todo.duration)}
-							</span>
 							{todo.date && (
 								<span>{formatDateToMonthDay(new Date(todo.date))}</span>
 							)}
+							<span className="opacity-75">
+								{convertMinutesToTime(todo.duration)}
+							</span>
+							
 						</div>
 					)}
 				</div>

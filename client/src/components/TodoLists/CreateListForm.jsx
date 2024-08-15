@@ -38,7 +38,7 @@ export default function CreateListForm({ setCreating, fetchData, inputRef }) {
             />
             <div className="mt-2 flex gap-2 justify-center items-center">
                 <Button color="gray" className="w-full" onClick={() => {setCreating(false); setNewList('')}}>Cancel</Button>
-                <Button color="gray" className="w-full" onClick={handleSubmit}>Submit</Button>
+                <Button color="gray" className="w-full" onClick={handleSubmit}>Create</Button>
             </div>
         </form>
       </div>
