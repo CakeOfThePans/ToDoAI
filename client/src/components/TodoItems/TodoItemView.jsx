@@ -18,6 +18,8 @@ export default function TodoItemView({
 	setHideCompleted,
 	showOverdueOnly,
 	setShowOverdueOnly,
+	showScheduledOnly,
+	setShowScheduledOnly,
 }) {
 	const defaultLists = ['Today', 'Upcoming', 'In Queue']
 	const [searching, setSearching] = useState(false)
@@ -56,7 +58,7 @@ export default function TodoItemView({
 	}
 
 	return (
-		<div className="flex flex-col bg-white border border-gray-200 w-96 m-4 rounded-xl">
+		<div className="flex flex-col bg-white border border-gray-200 w-[444px] m-4 rounded-xl">
 			<TodoItemHeader
 				listName={listName}
 				showInQueueOnly={showInQueueOnly}
@@ -67,6 +69,8 @@ export default function TodoItemView({
 				setShowOverdueOnly={setShowOverdueOnly}
 				searching={searching}
 				setSearching={setSearching}
+				showScheduledOnly={showScheduledOnly}
+				setShowScheduledOnly={setShowScheduledOnly}
 				fetchData={fetchData}
 			/>
 			<DragDropContext onDragEnd={handleDragEnd}>
@@ -79,7 +83,7 @@ export default function TodoItemView({
 						>
 							{todos.map((todo, index) => {
 								return (
-									<Draggable key={todo._id} draggableId={todo._id} index={index}>
+									<Draggable key={todo._id} draggableId={todo._id} index={index} isDragDisabled={defaultLists.includes(currentList)}>
 										{(provided) => (
 											<div
 												ref={provided.innerRef}

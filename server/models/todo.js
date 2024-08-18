@@ -33,8 +33,16 @@ const todoSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    date: {
+    endDate: {
         type: Date
+    },
+    startDate: {
+        type: Date
+    },
+    scheduled: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 })
 

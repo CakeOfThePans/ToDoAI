@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { TextInput, Button, Dropdown, DropdownItem } from 'flowbite-react'
+import { TextInput, Button, Dropdown, DropdownItem, Textarea } from 'flowbite-react'
 import { DatePicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 import axios from 'axios'
@@ -11,7 +11,8 @@ export default function EditItemForm({
 	inputRef,
 }) {
 	const [newTodo, setNewTodo] = useState(todo.task)
-	const [selectedDate, setSelectedDate] = useState(todo.date)
+	const [selectedDate, setSelectedDate] = useState(todo.endDate ? new Date(todo.endDate) : null)
+	const [selectedTime, setSelectedTime] = useState(todo.startDate ? new Date(todo.startDate) : null)
 	const [selectedDuration, setSelectedDuration] = useState(todo.duration)
 
 	const durationOptions = [
@@ -40,10 +41,30 @@ export default function EditItemForm({
 		e.preventDefault()
 		try {
 			if (!newTodo) return
+
+			let startDate = null
+			let endDate = null
+			let scheduled = false
+			//if both date and time have been selected, the startDate and endDate are set
+			if(selectedDate && selectedTime){
+				startDate = combineDateAndTime(selectedDate, selectedTime)
+				endDate = new Date(startDate)
+				endDate.setMinutes(endDate.getMinutes() + selectedDuration)
+				scheduled = true
+			}
+			//if only date is selected, the startDate is null and the endDate is the end of the selected date
+			else if(selectedDate){
+				endDate = selectedDate
+			}
+			//if neither is selected, the startDate and endDate is null
+			//note that if time is selected with no selected date, it will automatically set it to today
+
 			await axios.put(`/api/todos/${todo._id}`, {
 				task: newTodo,
 				duration: selectedDuration,
-				date: selectedDate,
+				startDate: startDate,
+				endDate: endDate,
+				scheduled: scheduled
 			})
 			setNewTodo('')
 			setEditing(null)
@@ -53,9 +74,20 @@ export default function EditItemForm({
 		}
 	}
 
+	function combineDateAndTime(date, time) {
+		const combined = new Date(
+		  date.getFullYear(),
+		  date.getMonth(),
+		  date.getDate(),
+		  time.getHours(),
+		  time.getMinutes()
+		);
+		return combined;
+	}
+
 	return (
 		<form className="w-full p-2 space-y-2" onSubmit={handleSubmit}>
-			<TextInput
+			<Textarea
 				ref={inputRef}
 				type="text"
 				placeholder="New Todo"
@@ -65,9 +97,10 @@ export default function EditItemForm({
 			<div className="flex justify-between gap-2 w-full">
 				<DatePicker
 					oneTap
-					placeholder="Select Due Date"
-					defaultValue={selectedDate ? new Date(selectedDate) : null}
-					className="w-3/6"
+					format="MM/dd/yyyy"
+					placeholder="Select Date"
+					value={selectedDate}
+					className="w-5/12"
 					onSelect={(date) => {
 						date.setHours(23, 59, 59, 999) //set date to latest possible time
 						setSelectedDate(date)
@@ -76,16 +109,36 @@ export default function EditItemForm({
 						setSelectedDate(null)
 					}}
 				/>
-				<div className="w-1/2 border rounded-md p-2 hover:bg-gray-50 flex justify-center">
+				<DatePicker
+						format="hh:mm aa"
+						showMeridian
+						hideMinutes={(minute) => minute % 15 !== 0}
+						placeholder="Select Time"
+						value={selectedTime}
+						className="w-5/12"
+						onSelect={(date) => {
+							//round the time to the nearest 15 mins
+							const ms = 1000 * 60 * 15 // 15 minutes in milliseconds
+							date = new Date(Math.round(date.getTime() / ms) * ms)
+							setSelectedTime(date)
+
+							//automatically set to today if date hasn't been selected
+							setSelectedDate(new Date())
+						}}
+						onClean={() => {
+							setSelectedTime(null)
+						}}
+					/>
+				<div className="w-3/12 border rounded-md p-2 hover:bg-gray-50 flex justify-center">
 					<Dropdown
 						className="h-80 overflow-y-auto"
 						inline
 						color="light"
-						label={`Duration: ${
+						label={
 							durationOptions.find(
 								(option) => option.value === selectedDuration
 							)?.label
-						}`}
+						}
 					>
 						{durationOptions.map((option) => (
 							<DropdownItem

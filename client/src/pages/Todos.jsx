@@ -13,15 +13,16 @@ export default function Todos() {
 	const [showInQueueOnly, setShowInQueueOnly] = useState(false)
 	const [hideCompleted, setHideCompleted] = useState(true)
 	const [showOverdueOnly, setShowOverdueOnly] = useState(false)
+	const [showScheduledOnly, setShowScheduledOnly] = useState(false)
 
 	useEffect(() => {
 		fetchData()
-	}, [currentList, showInQueueOnly, hideCompleted, showOverdueOnly])
+	}, [currentList, showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly])
 
 	const fetchData = async (task) => {
 		try {
 			let res
-			let query = `showInQueueOnly=${showInQueueOnly}&hideCompleted=${hideCompleted}&showOverdueOnly=${showOverdueOnly}`
+			let query = `showInQueueOnly=${showInQueueOnly}&hideCompleted=${hideCompleted}&showOverdueOnly=${showOverdueOnly}&showScheduledOnly=${showScheduledOnly}`
 			if(task != undefined) query += `&task=${task}`
 			
 			if (currentList === 'Inbox') {
@@ -62,6 +63,8 @@ export default function Todos() {
 				setHideCompleted={setHideCompleted}
 				showOverdueOnly={showOverdueOnly}
 				setShowOverdueOnly={setShowOverdueOnly}
+				showScheduledOnly={showScheduledOnly}
+				setShowScheduledOnly={setShowScheduledOnly}
 			/>
 			<TodoCalendarView />
 		</div>

@@ -4,7 +4,7 @@ import { Todo } from '../models/todo.js'
 
 export const getTodos = async (req, res) => {
 	try {
-        const { today, upcoming, inQueue, showInQueueOnly, hideCompleted, showOverdueOnly, task } = req.query
+        const { today, upcoming, inQueue, showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
         const query = {
             userId: req.user.id
         }
@@ -16,15 +16,16 @@ export const getTodos = async (req, res) => {
             const endOfDay = new Date()
             endOfDay.setHours(23, 59, 59, 999)
 
-            query.date = { $gte: startOfDay, $lte: endOfDay }
+            query.endDate = { $gte: startOfDay, $lte: endOfDay }
         }
-        else if(upcoming === "true") query.date = { $gte: new Date() }
+        else if(upcoming === "true") query.endDate = { $gte: new Date() }
         else if(inQueue === "true") query.queue = true
 
         //extra query
         if(showInQueueOnly === "true") query.queue = true
         if(hideCompleted === "true") query.completed = false
-        if(showOverdueOnly === "true") query.date = { $lt: new Date() }
+        if(showOverdueOnly === "true") query.endDate = { $lt: new Date() }
+        if(showScheduledOnly === "true") query.scheduled = true
         if(task) query.task = { $regex: task, $options: 'i' }
 
 		const todos = await Todo.find(query).sort({
@@ -59,13 +60,13 @@ export const getDefaultLists = async (req, res) => {
     
                 lists.push({
                     name: list,
-                    count: await Todo.countDocuments({ date: { $gte: startOfDay, $lte: endOfDay } })
+                    count: await Todo.countDocuments({ endDate: { $gte: startOfDay, $lte: endOfDay } })
                 })
             }
             else if(list === "Upcoming"){
                 lists.push({
                     name: list,
-                    count: await Todo.countDocuments({ date: { $gte: new Date() } })
+                    count: await Todo.countDocuments({ endDate: { $gte: new Date() } })
                 })
             }
             else if(list === "In Queue") {
@@ -91,13 +92,14 @@ export const getTodosFromList = async (req, res) => {
             return res.status(400).send("User does not have access to this list")
         }
 
-        const { showInQueueOnly, hideCompleted, showOverdueOnly, task } = req.query
+        const { showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
         const query = {
             listId: req.params.listId
         }
         if(showInQueueOnly === "true") query.queue = true
         if(hideCompleted === "true") query.completed = false
-        if(showOverdueOnly === "true") query.date = { $lt: new Date() }
+        if(showOverdueOnly === "true") query.endDate = { $lt: new Date() }
+        if(showScheduledOnly === "true") query.scheduled = true
         if(task) query.task = { $regex: task, $options: 'i' }
 
 		const todos = await Todo.find(query).sort({
@@ -127,7 +129,9 @@ export const createTodo = async (req, res) => {
             queue: false,
             order: list.count,
             duration: req.body.duration,
-            date: req.body.date
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            scheduled: req.body.scheduled
         })
 		todo = await todo.save()
 

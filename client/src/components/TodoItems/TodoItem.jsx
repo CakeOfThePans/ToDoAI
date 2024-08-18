@@ -87,6 +87,18 @@ export default function TodoItem({
 		return date.toLocaleDateString('en-US', options)
 	}
 
+
+	function formatDateToTime(date) {
+		const options = {
+		  month: 'long',
+		  day: 'numeric',
+		  hour: '2-digit',
+		  minute: '2-digit',
+		  hour12: true // Enables AM/PM format
+		};
+		return date.toLocaleString('en-US', options);
+	}
+
 	return (
 		<li className="cursor-pointer rounded-xl mx-2 transition-all flex justify-between items-center border">
 			{editing == todo._id ? (
@@ -108,15 +120,14 @@ export default function TodoItem({
 					}}
 					ref={itemRef}
 				>
-					<div className="flex items-center gap-2 w-3/5">
+					<div className="flex items-center gap-2 w-1/2">
 						<Checkbox
-							id="remember"
 							className="focus:outline-none focus:ring-0 text-black"
 							style={{ boxShadow: 'none' }}
 							checked={completed}
 							onChange={handleToggleCompleted}
 						/>
-						<Label htmlFor="remember" className='truncate text-wrap'>{todo.task}</Label>
+						<Label className='truncate text-wrap'>{todo.task}</Label>
 					</div>
 					{isHovered ? (
 						<HoverOptions
@@ -130,8 +141,12 @@ export default function TodoItem({
 						/>
 					) : (
 						<div className="flex gap-2">
-							{todo.date && (
-								<span className='text-nowrap'>{formatDateToMonthDay(new Date(todo.date))}</span>
+							{todo.endDate && (
+								todo.startDate ? (
+									<span className='text-nowrap'>{formatDateToTime(new Date(todo.startDate))}</span>
+								) : (
+									<span className='text-nowrap'>{formatDateToMonthDay(new Date(todo.endDate))}</span>
+								)
 							)}
 							<span className="opacity-75">
 								{convertMinutesToTime(todo.duration)}
