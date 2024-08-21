@@ -36,6 +36,12 @@ export default function TodoItem({
 		}
 	}, [isHovered])
 
+	useEffect(() => {
+		//update hover options when todo has been updated
+		setInQueue(todo.queue)
+		setCompleted(todo.completed)
+	}, [todo])
+
 	const handleToggleCompleted = async () => {
 		try {
 			await axios.put(`/api/todos/${todo._id}`, {
@@ -122,7 +128,7 @@ export default function TodoItem({
 				>
 					<div className="flex items-center gap-2 w-1/2">
 						<Checkbox
-							className="focus:outline-none focus:ring-0 text-black"
+							className="focus:outline-none focus:ring-0 text-gray-700"
 							style={{ boxShadow: 'none' }}
 							checked={completed}
 							onChange={handleToggleCompleted}

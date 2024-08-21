@@ -1,19 +1,21 @@
 import TodoListView from '../components/TodoLists/TodoListView'
 import TodoItemView from '../components/TodoItems/TodoItemView'
 import TodoCalendarView from '../components/TodoCalendar/TodoCalendarView'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 
 export default function Todos() {
-	const [todos, setTodos] = useState([])
 	const { currentList } = useSelector((state) => state.list)
 	const { currentUser } = useSelector((state) => state.user)
+	const [todos, setTodos] = useState([])
 	const [listName, setListName] = useState('')
 	const [showInQueueOnly, setShowInQueueOnly] = useState(false)
 	const [hideCompleted, setHideCompleted] = useState(true)
 	const [showOverdueOnly, setShowOverdueOnly] = useState(false)
 	const [showScheduledOnly, setShowScheduledOnly] = useState(false)
+	const [dragging, setDragging] = useState(false)	//for calendar dragging to unschedule
+	const dropZoneRef = useRef(null)
 
 	useEffect(() => {
 		fetchData()
@@ -65,8 +67,10 @@ export default function Todos() {
 				setShowOverdueOnly={setShowOverdueOnly}
 				showScheduledOnly={showScheduledOnly}
 				setShowScheduledOnly={setShowScheduledOnly}
+				dragging={dragging}
+				dropZoneRef={dropZoneRef}
 			/>
-			<TodoCalendarView />
+			<TodoCalendarView todos={todos} fetchData={fetchData} dragging={dragging} setDragging={setDragging} dropZoneRef={dropZoneRef}/>
 		</div>
 	)
 }

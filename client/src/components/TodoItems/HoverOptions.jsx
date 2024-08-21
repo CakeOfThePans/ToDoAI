@@ -12,7 +12,7 @@ export default function HoverOptions({
 }) {
 	return (
 		<div className="flex items-center gap-2">
-			{!completed && (
+			{(!completed && !todo.scheduled) && (
 				<Tooltip
 					content={
 						inQueue ? 'Remove from scheduling queue' : 'Add to scheduling queue'

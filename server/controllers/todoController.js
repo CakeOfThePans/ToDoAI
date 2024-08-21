@@ -27,7 +27,7 @@ export const getTodos = async (req, res) => {
         if(showOverdueOnly === "true") query.endDate = { $lt: new Date() }
         if(showScheduledOnly === "true") query.scheduled = true
         if(task) query.task = { $regex: task, $options: 'i' }
-
+        
 		const todos = await Todo.find(query).sort({
             listId: 1,
             order: 1

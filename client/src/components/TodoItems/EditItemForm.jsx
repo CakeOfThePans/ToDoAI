@@ -45,12 +45,14 @@ export default function EditItemForm({
 			let startDate = null
 			let endDate = null
 			let scheduled = false
+			let queue = todo.queue
 			//if both date and time have been selected, the startDate and endDate are set
 			if(selectedDate && selectedTime){
 				startDate = combineDateAndTime(selectedDate, selectedTime)
 				endDate = new Date(startDate)
 				endDate.setMinutes(endDate.getMinutes() + selectedDuration)
 				scheduled = true
+				queue = false
 			}
 			//if only date is selected, the startDate is null and the endDate is the end of the selected date
 			else if(selectedDate){
@@ -64,7 +66,8 @@ export default function EditItemForm({
 				duration: selectedDuration,
 				startDate: startDate,
 				endDate: endDate,
-				scheduled: scheduled
+				scheduled: scheduled,
+				queue: queue
 			})
 			setNewTodo('')
 			setEditing(null)
