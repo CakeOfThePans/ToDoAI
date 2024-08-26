@@ -1,6 +1,6 @@
+import './config/config.js'
 import express from 'express'
 import mongoose from 'mongoose'
-import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
@@ -9,8 +9,7 @@ import authRouter from './routes/auth.js'
 import userRouter from './routes/users.js'
 import todoRouter from './routes/todos.js'
 import listRouter from './routes/lists.js'
-
-dotenv.config()
+import aiRouter from './routes/ai.js'
 
 const app = express()
 
@@ -34,7 +33,9 @@ mongoose
     console.log(err)
   })
 
+
 app.use('/api/auth', authRouter)
 app.use('/api/users', verifyToken, userRouter)
 app.use('/api/todos', verifyToken, todoRouter)
 app.use('/api/lists', verifyToken, listRouter)
+app.use('/api/ai', verifyToken, aiRouter)
