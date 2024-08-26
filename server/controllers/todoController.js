@@ -4,7 +4,8 @@ import { Todo } from '../models/todo.js'
 
 export const getTodos = async (req, res) => {
 	try {
-        const { today, upcoming, inQueue, showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
+        // const { today, upcoming, inQueue, showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
+        const { today, upcoming, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
         const query = {
             userId: req.user.id
         }
@@ -19,10 +20,10 @@ export const getTodos = async (req, res) => {
             query.endDate = { $gte: startOfDay, $lte: endOfDay }
         }
         else if(upcoming === "true") query.endDate = { $gte: new Date() }
-        else if(inQueue === "true") query.queue = true
+        // else if(inQueue === "true") query.queue = true
 
         //extra query
-        if(showInQueueOnly === "true") query.queue = true
+        // if(showInQueueOnly === "true") query.queue = true
         if(hideCompleted === "true") query.completed = false
         if(showOverdueOnly === "true") query.endDate = { $lt: new Date() }
         if(showScheduledOnly === "true") query.scheduled = true
@@ -40,7 +41,8 @@ export const getTodos = async (req, res) => {
 
 export const getDefaultLists = async (req, res) => {
 	try {
-        const defaultLists = ['Inbox', 'Today', 'Upcoming', 'In Queue']
+        // const defaultLists = ['Inbox', 'Today', 'Upcoming', 'In Queue']
+        const defaultLists = ['Inbox', 'Today', 'Upcoming']
         const lists = []
         for(const list of defaultLists){
             if(list === "Inbox"){
@@ -69,12 +71,12 @@ export const getDefaultLists = async (req, res) => {
                     count: await Todo.countDocuments({ endDate: { $gte: new Date() } })
                 })
             }
-            else if(list === "In Queue") {
-                lists.push({
-                    name: list,
-                    count: await Todo.countDocuments({ queue: true })
-                })
-            }
+            // else if(list === "In Queue") {
+            //     lists.push({
+            //         name: list,
+            //         count: await Todo.countDocuments({ queue: true })
+            //     })
+            // }
         } 
 		res.send(lists)
 	} catch (err) {
@@ -92,11 +94,12 @@ export const getTodosFromList = async (req, res) => {
             return res.status(400).send("User does not have access to this list")
         }
 
-        const { showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
+        // const { showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
+        const { hideCompleted, showOverdueOnly, showScheduledOnly, task } = req.query
         const query = {
             listId: req.params.listId
         }
-        if(showInQueueOnly === "true") query.queue = true
+        // if(showInQueueOnly === "true") query.queue = true
         if(hideCompleted === "true") query.completed = false
         if(showOverdueOnly === "true") query.endDate = { $lt: new Date() }
         if(showScheduledOnly === "true") query.scheduled = true
@@ -126,7 +129,7 @@ export const createTodo = async (req, res) => {
             listId: req.body.listId,
             task: req.body.task,
             completed: false,
-            queue: false,
+            // queue: false,
             order: list.count,
             duration: req.body.duration,
             startDate: req.body.startDate,

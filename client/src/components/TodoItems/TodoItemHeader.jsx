@@ -4,8 +4,8 @@ import { useEffect, useRef } from 'react'
 
 export default function TodoItemHeader({
 	listName,
-	showInQueueOnly,
-	setShowInQueueOnly,
+	// showInQueueOnly,
+	// setShowInQueueOnly,
 	hideCompleted,
 	setHideCompleted,
 	showOverdueOnly,
@@ -68,7 +68,7 @@ export default function TodoItemHeader({
 						/>
 					</div>
 				</Tooltip>
-				<Tooltip
+				{/* <Tooltip
 					content="Show in queue todos only"
 					style="dark"
 					animation="duration-300"
@@ -89,7 +89,7 @@ export default function TodoItemHeader({
 							}
 						/>
 					</div>
-				</Tooltip>
+				</Tooltip> */}
 				<Tooltip
 					content="Show scheduled todos only"
 					style="dark"

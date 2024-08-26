@@ -13,7 +13,7 @@ export default function TodoItem({
 	inputRef,
 }) {
 	const [isHovered, setIsHovered] = useState(false)
-	const [inQueue, setInQueue] = useState(todo.queue)
+	// const [inQueue, setInQueue] = useState(todo.queue)
 	const [completed, setCompleted] = useState(todo.completed)
 	const itemRef = useRef(null)
 
@@ -38,7 +38,7 @@ export default function TodoItem({
 
 	useEffect(() => {
 		//update hover options when todo has been updated
-		setInQueue(todo.queue)
+		// setInQueue(todo.queue)
 		setCompleted(todo.completed)
 	}, [todo])
 
@@ -46,27 +46,27 @@ export default function TodoItem({
 		try {
 			await axios.put(`/api/todos/${todo._id}`, {
 				completed: !completed,
-				queue: false,
+				// queue: false,
 			})
 			setCompleted(!completed)
-			setInQueue(false)
+			// setInQueue(false)
 			fetchData()
 		} catch (err) {
 			console.log(err)
 		}
 	}
 
-	const handleToggleQueue = async () => {
-		try {
-			await axios.put(`/api/todos/${todo._id}`, {
-				queue: !inQueue,
-			})
-			setInQueue(!inQueue)
-			fetchData()
-		} catch (err) {
-			console.log(err)
-		}
-	}
+	// const handleToggleQueue = async () => {
+	// 	try {
+	// 		await axios.put(`/api/todos/${todo._id}`, {
+	// 			queue: !inQueue,
+	// 		})
+	// 		setInQueue(!inQueue)
+	// 		fetchData()
+	// 	} catch (err) {
+	// 		console.log(err)
+	// 	}
+	// }
 
 	const handleDelete = async () => {
 		try {
@@ -138,8 +138,8 @@ export default function TodoItem({
 					{isHovered ? (
 						<HoverOptions
 							completed={completed}
-							inQueue={inQueue}
-							handleToggleQueue={handleToggleQueue}
+							// inQueue={inQueue}
+							// handleToggleQueue={handleToggleQueue}
 							setEditing={setEditing}
 							setIsHovered={setIsHovered}
 							handleDelete={handleDelete}

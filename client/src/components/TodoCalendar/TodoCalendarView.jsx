@@ -15,7 +15,8 @@ export default function TodoCalendarView({
 	setDragging,
 	dropZoneRef,
 }) {
-	const defaultLists = ['Today', 'Upcoming', 'In Queue']
+	// const defaultLists = ['Today', 'Upcoming', 'In Queue']
+	const defaultLists = ['Today', 'Upcoming']
 	const { currentList } = useSelector((state) => state.list)
 	const { currentUser } = useSelector((state) => state.user)
 	const [events, setEvents] = useState([])
@@ -167,7 +168,7 @@ export default function TodoCalendarView({
 				endDate: event.end,
 				duration: Math.floor((event.end - event.start) / 1000 / 60),
 				scheduled: true,
-				queue: false,
+				// queue: false,
 				completed: false,
 			})
 			fetchData()

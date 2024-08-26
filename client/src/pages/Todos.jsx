@@ -10,7 +10,7 @@ export default function Todos() {
 	const { currentUser } = useSelector((state) => state.user)
 	const [todos, setTodos] = useState([])
 	const [listName, setListName] = useState('')
-	const [showInQueueOnly, setShowInQueueOnly] = useState(false)
+	// const [showInQueueOnly, setShowInQueueOnly] = useState(false)
 	const [hideCompleted, setHideCompleted] = useState(true)
 	const [showOverdueOnly, setShowOverdueOnly] = useState(false)
 	const [showScheduledOnly, setShowScheduledOnly] = useState(false)
@@ -19,12 +19,15 @@ export default function Todos() {
 
 	useEffect(() => {
 		fetchData()
-	}, [currentList, showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly])
+	// }, [currentList, showInQueueOnly, hideCompleted, showOverdueOnly, showScheduledOnly])
+	}, [currentList, hideCompleted, showOverdueOnly, showScheduledOnly])
+
 
 	const fetchData = async (task) => {
 		try {
 			let res
-			let query = `showInQueueOnly=${showInQueueOnly}&hideCompleted=${hideCompleted}&showOverdueOnly=${showOverdueOnly}&showScheduledOnly=${showScheduledOnly}`
+			// let query = `showInQueueOnly=${showInQueueOnly}&hideCompleted=${hideCompleted}&showOverdueOnly=${showOverdueOnly}&showScheduledOnly=${showScheduledOnly}`
+			let query = `hideCompleted=${hideCompleted}&showOverdueOnly=${showOverdueOnly}&showScheduledOnly=${showScheduledOnly}`
 			if(task != undefined) query += `&task=${task}`
 			
 			if (currentList === 'Inbox') {
@@ -36,9 +39,9 @@ export default function Todos() {
 			} else if (currentList === 'Upcoming') {
 				res = await axios.get(`/api/todos?upcoming=true&${query}`)
 				setListName('Upcoming')
-			} else if (currentList === 'In Queue') {
-				res = await axios.get(`/api/todos?inQueue=true&${query}`)
-				setListName('In Queue')
+			// } else if (currentList === 'In Queue') {
+			// 	res = await axios.get(`/api/todos?inQueue=true&${query}`)
+			// 	setListName('In Queue')
 			} else {
 				res = await axios.get(`/api/todos/${currentList}?${query}`)
 				const res2 = await axios.get(`/api/lists/${currentList}`)
@@ -59,8 +62,8 @@ export default function Todos() {
 				fetchData={fetchData}
 				currentList={currentList}
 				listName={listName}
-				showInQueueOnly={showInQueueOnly}
-				setShowInQueueOnly={setShowInQueueOnly}
+				// showInQueueOnly={showInQueueOnly}
+				// setShowInQueueOnly={setShowInQueueOnly}
 				hideCompleted={hideCompleted}
 				setHideCompleted={setHideCompleted}
 				showOverdueOnly={showOverdueOnly}

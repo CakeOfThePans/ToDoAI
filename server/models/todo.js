@@ -20,11 +20,11 @@ const todoSchema = new mongoose.Schema({
         required: true,
         default: false
     },
-    queue: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
+    // queue: {
+    //     type: Boolean,
+    //     required: true,
+    //     default: false
+    // },
     order: {
         type: Number,
         required: true

@@ -3,8 +3,8 @@ import { BiCalendarPlus, BiPencil, BiTrash } from 'react-icons/bi'
 
 export default function HoverOptions({
 	completed,
-	inQueue,
-	handleToggleQueue,
+	// inQueue,
+	// handleToggleQueue,
 	setEditing,
 	setIsHovered,
 	handleDelete,
@@ -12,7 +12,7 @@ export default function HoverOptions({
 }) {
 	return (
 		<div className="flex items-center gap-2">
-			{(!completed && !todo.scheduled) && (
+			{/* {(!completed && !todo.scheduled) && (
 				<Tooltip
 					content={
 						inQueue ? 'Remove from scheduling queue' : 'Add to scheduling queue'
@@ -30,7 +30,7 @@ export default function HoverOptions({
 						<BiCalendarPlus size={21} onClick={handleToggleQueue} />
 					</div>
 				</Tooltip>
-			)}
+			)} */}
 			{!completed && (
 				<Tooltip
 					content="Edit todo"

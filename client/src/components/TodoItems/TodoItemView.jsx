@@ -13,8 +13,8 @@ export default function TodoItemView({
 	fetchData,
 	currentList,
 	listName,
-	showInQueueOnly,
-	setShowInQueueOnly,
+	// showInQueueOnly,
+	// setShowInQueueOnly,
 	hideCompleted,
 	setHideCompleted,
 	showOverdueOnly,
@@ -24,7 +24,8 @@ export default function TodoItemView({
 	dragging,
 	dropZoneRef
 }) {
-	const defaultLists = ['Today', 'Upcoming', 'In Queue']
+	// const defaultLists = ['Today', 'Upcoming', 'In Queue']
+	const defaultLists = ['Today', 'Upcoming']
 	const [searching, setSearching] = useState(false)
 	const [creating, setCreating] = useState(false)
 	const [editing, setEditing] = useState(null) //only one todo can be edited at a time
@@ -72,8 +73,8 @@ export default function TodoItemView({
 				<div className="flex flex-col bg-white border border-gray-200 w-[444px] m-4 rounded-xl">
 					<TodoItemHeader
 						listName={listName}
-						showInQueueOnly={showInQueueOnly}
-						setShowInQueueOnly={setShowInQueueOnly}
+						// showInQueueOnly={showInQueueOnly}
+						// setShowInQueueOnly={setShowInQueueOnly}
 						hideCompleted={hideCompleted}
 						setHideCompleted={setHideCompleted}
 						showOverdueOnly={showOverdueOnly}
