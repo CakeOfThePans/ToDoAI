@@ -13,7 +13,7 @@ axios.defaults.withCredentials = true
 
 export default function App() {
   return (
-    <div className="bg-gray-50 h-screen">
+    <div className="h-screen">
       <BrowserRouter>
         <Header />
         <div className='pt-16 h-full'>

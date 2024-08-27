@@ -65,8 +65,6 @@ export default function Profile() {
 					type="text"
 					id="username"
 					placeholder="username"
-					defaultValue={currentUser.username}
-					color=""
 					onChange={handleChange}
 				/>
 				<TextInput
@@ -74,7 +72,6 @@ export default function Profile() {
 					id="email"
 					placeholder="email"
 					defaultValue={currentUser.email}
-					color=""
 					onChange={handleChange}
 				/>
 				<TextInput
@@ -82,7 +79,6 @@ export default function Profile() {
 					id="password"
 					placeholder="New password"
 					value={formData.password}
-					color=""
 					onChange={handleChange}
 				/>
 				<Button color="light" type="submit">

@@ -43,14 +43,12 @@ export default function SignIn() {
           type="text"
           placeholder="Email"
           id="email"
-          color=""
           onChange={handleChange}
         />
         <TextInput
           type="password"
           placeholder="Password"
           id="password"
-          color=""
           onChange={handleChange}
         />
         <Button color="light" type="submit" disabled={loading}>

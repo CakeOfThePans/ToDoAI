@@ -28,7 +28,7 @@ export default function Header() {
   }
   return (
     <Navbar className="z-10 fixed w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 px-3 py-3" fluid>
-      <Link to="/" className="flex items-center gap-3">
+      <Link to="/" className="flex items-center gap-3 hover:text-current hover:no-underline focus:text-current focus:no-underline active:text-current active:no-underline">
         <HiBadgeCheck className="size-6" />
         <span className="whitespace-nowrap text-xl font-semibold">ToDoAI</span>
       </Link>
@@ -40,7 +40,7 @@ export default function Header() {
             label={
               <Avatar
                 alt="user"
-                src="../assets/profile.png"
+                img="/profile.png"
                 rounded
               />
             }
@@ -53,7 +53,7 @@ export default function Header() {
                 {currentUser.email}
               </span>
             </DropdownHeader>
-            <Link to="/profile">
+            <Link to="/profile" className='hover:text-current hover:no-underline focus:text-current focus:no-underline active:text-current active:no-underline'>
               <DropdownItem>Profile</DropdownItem>
             </Link>
             {/* <Link to="/settings">
@@ -63,8 +63,8 @@ export default function Header() {
             <DropdownItem onClick={handleSignout}>Sign Out</DropdownItem>
           </Dropdown>
         ) : (
-          <Link to="/sign-in">
-            <Button color="light">Sign In</Button>
+          <Link to="/sign-in" className='hover:text-current hover:no-underline focus:text-current focus:no-underline active:text-current active:no-underline'>
+            <Button color="light" className='focus:ring-0'>Sign In</Button>
           </Link>
         )}
       </div>

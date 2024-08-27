@@ -32,9 +32,9 @@ export default function SignUp() {
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-        <TextInput type="text" placeholder='Username' id='username' color="" onChange={handleChange}/>
-        <TextInput type="text" placeholder='Email' id='email' color="" onChange={handleChange}/>
-        <TextInput type="password" placeholder='Password' id='password' color="" onChange={handleChange}/>
+        <TextInput type="text" placeholder='Username' id='username' onChange={handleChange}/>
+        <TextInput type="text" placeholder='Email' id='email' onChange={handleChange}/>
+        <TextInput type="password" placeholder='Password' id='password' onChange={handleChange}/>
         <Button color="light" type='submit' disabled={loading}>
           {loading ? (
             <>
