@@ -162,7 +162,7 @@ export default function CreateItemForm({
 				<div className="mt-2 flex gap-2 justify-center items-center">
 					<Button
 						color="gray"
-						className="w-full"
+						className="w-full focus:ring-0"
 						onClick={() => {
 							setCreating(false)
 							setNewTodo('')
@@ -170,7 +170,7 @@ export default function CreateItemForm({
 					>
 						Cancel
 					</Button>
-					<Button color="gray" className="w-full" onClick={handleSubmit}>
+					<Button color="gray" className="w-full focus:ring-0" onClick={handleSubmit}>
 						Create
 					</Button>
 				</div>

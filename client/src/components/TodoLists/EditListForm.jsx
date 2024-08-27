@@ -36,7 +36,7 @@ export default function EditListForm({ list, setEditing, fetchData, inputRef }) 
 			<div className="mt-2 flex gap-2 justify-center items-center">
 				<Button
 					color="gray"
-					className="w-full"
+					className="w-full focus:ring-0"
 					onClick={() => {
 						setEditing(null)
 						setNewList('')
@@ -44,7 +44,7 @@ export default function EditListForm({ list, setEditing, fetchData, inputRef }) 
 				>
 					Cancel
 				</Button>
-				<Button color="gray" className="w-full" onClick={handleEdit}>
+				<Button color="gray" className="w-full focus:ring-0" onClick={handleEdit}>
 					Update
 				</Button>
 			</div>

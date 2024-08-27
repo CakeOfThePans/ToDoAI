@@ -158,7 +158,7 @@ export default function EditItemForm({
 			<div className="mt-2 flex gap-2 justify-center items-center">
 				<Button
 					color="gray"
-					className="w-full"
+					className="w-full focus:ring-0"
 					onClick={() => {
 						setEditing(null)
 						setNewTodo('')
@@ -166,7 +166,7 @@ export default function EditItemForm({
 				>
 					Cancel
 				</Button>
-				<Button color="gray" className="w-full" onClick={handleSubmit}>
+				<Button color="gray" className="w-full focus:ring-0" onClick={handleSubmit}>
 					Update
 				</Button>
 			</div>
