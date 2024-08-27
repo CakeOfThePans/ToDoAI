@@ -4,6 +4,7 @@ import TodoCalendarView from '../components/TodoCalendar/TodoCalendarView'
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import Chatbox from '../components/Chatbox/Chatbox'
 
 export default function Todos() {
 	const { currentList } = useSelector((state) => state.list)
@@ -54,7 +55,7 @@ export default function Todos() {
 	}
 
 	return (
-		<div className="flex h-full">
+		<div className="flex h-full bg-gray-50">
 			<TodoListView todos={todos} />
 			<TodoItemView
 				todos={todos}
@@ -74,6 +75,7 @@ export default function Todos() {
 				dropZoneRef={dropZoneRef}
 			/>
 			<TodoCalendarView todos={todos} fetchData={fetchData} dragging={dragging} setDragging={setDragging} dropZoneRef={dropZoneRef}/>
+			<Chatbox fetchData={fetchData}/>
 		</div>
 	)
 }

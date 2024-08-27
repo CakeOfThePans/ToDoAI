@@ -71,7 +71,7 @@ export default function TodoCalendarView({
 					readOnly
 					id={eventContent.event.id}
 				/>
-				<Label className="text-sm truncate text-wrap overflow-hidden whitespace-normal max-h-full">
+				<Label className="text-sm truncate text-wrap text-white overflow-hidden whitespace-normal max-h-full">
 					{eventContent.event.title}
 				</Label>
 			</div>
@@ -119,7 +119,7 @@ export default function TodoCalendarView({
 			end,
 			position: {
 				top: jsEvent.pageY,
-				left: jsEvent.pageX,
+				left: jsEvent.pageX < window.innerWidth - 185 ? jsEvent.pageX : jsEvent.pageX - 185,	//don't expand the width
 			},
 		})
 		// Focus input field after render
