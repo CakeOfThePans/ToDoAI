@@ -3,6 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import path from 'path'
 
 import { verifyToken } from './middleware/verifyToken.js'
 import authRouter from './routes/auth.js'
@@ -39,3 +40,11 @@ app.use('/api/users', verifyToken, userRouter)
 app.use('/api/todos', verifyToken, todoRouter)
 app.use('/api/lists', verifyToken, listRouter)
 app.use('/api/ai', verifyToken, aiRouter)
+
+//serve static file from frontend
+const __dirname = path.resolve()
+app.use(express.static(path.join(__dirname, '/client/dist')))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/dist/index.html'))
+})
