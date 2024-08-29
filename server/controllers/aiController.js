@@ -28,6 +28,7 @@ const prompt = ChatPromptTemplate.fromTemplate(`
     Adjust duration accordingly if the length is mentioned.
     Note that the start date should only be set if a time of day is provided. 
     Make sure all time frames are within 15-minute intervals unless it's 11:59.999pm.
+    Ensure that all datetimes are in ISO 8601 format and set based on the timezone.
 
     Some example word mappings to actions: 
     Words for create are "create", "add"
@@ -88,11 +89,12 @@ export const handleMessage = async (req, res) => {
 			current_date: roundToNearest15Minutes(new Date()),
 			current_list: req.body.current_list,
 		})
-		console.log(output)
+		// console.log(output)
 		const message = await doAction(req, output)
 		return res.send(message)
 	} catch (err) {
-		return res.status(500).send(err.message)
+        console.log(err.message)
+		return res.send('Something went wrong. Please try again later.')
 	}
 }
 

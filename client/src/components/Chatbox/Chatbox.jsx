@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 export default function Chatbox({ fetchData }) {
 	const { currentList } = useSelector((state) => state.list)
 	const [isOpen, setIsOpen] = useState(false)
+	const [loading, setLoading] = useState(false)
 	const [messages, setMessages] = useState([
 		{
 			text: `
@@ -28,7 +29,7 @@ export default function Chatbox({ fetchData }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		if (input) {
+		if (input && !loading) {
 			const text = input
 			setInput('')
 			setMessages([
@@ -36,6 +37,7 @@ export default function Chatbox({ fetchData }) {
 				{ text: text, sender: 'user' },
 				{ text: 'Loading...', sender: 'ai' },
 			])
+			setLoading(true)
 
 			try {
 				//call ai
@@ -48,6 +50,7 @@ export default function Chatbox({ fetchData }) {
 					...previousMessages.slice(0, -1),	//remove loading
 					{ text: res.data, sender: 'ai' },
 				])
+				setLoading(false)
 				fetchData()
 			} catch (err) {
 				console.log(err)
