@@ -62,13 +62,13 @@ export const getDefaultLists = async (req, res) => {
     
                 lists.push({
                     name: list,
-                    count: await Todo.countDocuments({ endDate: { $gte: startOfDay, $lte: endOfDay } })
+                    count: await Todo.countDocuments({ userId: req.user.id, endDate: { $gte: startOfDay, $lte: endOfDay } })
                 })
             }
             else if(list === "Upcoming"){
                 lists.push({
                     name: list,
-                    count: await Todo.countDocuments({ endDate: { $gte: new Date() } })
+                    count: await Todo.countDocuments({ userId: req.user.id, endDate: { $gte: new Date() } })
                 })
             }
             // else if(list === "In Queue") {

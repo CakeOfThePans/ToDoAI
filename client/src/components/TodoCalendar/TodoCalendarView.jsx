@@ -192,7 +192,8 @@ export default function TodoCalendarView({
 				slotDuration="00:15:00"
 				slotLabelInterval="01:00:00"
 				displayEventTime={false}
-				// eventClassNames="text-sm text-wrap"
+				allDaySlot={false}
+				nowIndicator={true}
 				eventContent={renderEventContent}
 				editable
 				selectable
