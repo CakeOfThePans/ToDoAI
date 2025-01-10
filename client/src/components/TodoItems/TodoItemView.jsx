@@ -10,11 +10,11 @@ import DraggableEvent from '../TodoCalendar/DraggableEvent'
 export default function TodoItemView({
 	todos,
 	setTodos,
-	selectedTodo,
-	setSelectedTodo,
 	fetchData,
 	currentList,
 	listName,
+	// showInQueueOnly,
+	// setShowInQueueOnly,
 	hideCompleted,
 	setHideCompleted,
 	showOverdueOnly,
@@ -24,6 +24,7 @@ export default function TodoItemView({
 	dragging,
 	dropZoneRef
 }) {
+	// const defaultLists = ['Today', 'Upcoming', 'In Queue']
 	const defaultLists = ['Today', 'Upcoming']
 	const [searching, setSearching] = useState(false)
 	const [creating, setCreating] = useState(false)
@@ -69,9 +70,11 @@ export default function TodoItemView({
 					<p className="text-gray-600 text-xl">Drop todos here to unschedule them</p>
 				</div>
 			) : (
-				<div className="flex flex-col bg-white border border-gray-200 w-[500px] m-4 rounded-xl">
+				<div className="flex flex-col bg-white border border-gray-200 w-[444px] m-4 rounded-xl">
 					<TodoItemHeader
 						listName={listName}
+						// showInQueueOnly={showInQueueOnly}
+						// setShowInQueueOnly={setShowInQueueOnly}
 						hideCompleted={hideCompleted}
 						setHideCompleted={setHideCompleted}
 						showOverdueOnly={showOverdueOnly}
@@ -112,8 +115,6 @@ export default function TodoItemView({
 														>
 															<TodoItem
 																todo={todo}
-																selectedTodo={selectedTodo}
-																setSelectedTodo={setSelectedTodo}
 																fetchData={fetchData}
 																key={todo._id}
 																currentList={currentList}

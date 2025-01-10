@@ -4,7 +4,6 @@ import {
 	Dropdown,
 	DropdownItem,
 	Textarea,
-	TextInput,
 } from 'flowbite-react'
 import { DatePicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
@@ -17,7 +16,6 @@ export default function CreateItemForm({
 	inputRef,
 }) {
 	const [newTodo, setNewTodo] = useState('')
-	const [notes, setNotes] = useState('')
 	const [selectedDate, setSelectedDate] = useState(null)
 	const [selectedTime, setSelectedTime] = useState(null)
 	const [selectedDuration, setSelectedDuration] = useState(30)
@@ -69,14 +67,12 @@ export default function CreateItemForm({
 			await axios.post('/api/todos', {
 				listId: currentList,
 				task: newTodo,
-				notes: notes,
 				duration: selectedDuration,
 				startDate: startDate,
 				endDate: endDate,
 				scheduled: scheduled
 			})
 			setNewTodo('')
-			setNotes('')
 			setCreating(false)
 			fetchData()
 		} catch (err) {
@@ -98,18 +94,12 @@ export default function CreateItemForm({
 	return (
 		<div className="rounded-xl p-2 mx-2 border">
 			<form className="w-full space-y-2" onSubmit={handleSubmit}>
-				<TextInput
+				<Textarea
 					ref={inputRef}
 					type="text"
 					placeholder="New Todo"
 					value={newTodo}
 					onChange={(e) => setNewTodo(e.target.value)}
-				/>
-				<Textarea
-					type="text"
-					placeholder="Notes"
-					value={notes}
-					onChange={(e) => setNotes(e.target.value)}
 				/>
 				<div className="flex justify-between gap-2 w-full">
 					<DatePicker

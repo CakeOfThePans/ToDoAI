@@ -15,15 +15,16 @@ const todoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    notes: {
-        type: String,
-        required: false
-    },
     completed: {
         type: Boolean,
         required: true,
         default: false
     },
+    // queue: {
+    //     type: Boolean,
+    //     required: true,
+    //     default: false
+    // },
     order: {
         type: Number,
         required: true
