@@ -52,21 +52,21 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
   try {
-    const { email, password } = req.body
-    if (!email || email === '') {
-      return res.status(400).send('Missing email')
+    const { emailOrUsername, password } = req.body
+    if (!emailOrUsername || emailOrUsername === '') {
+      return res.status(400).send('Missing email or username')
     }
     if (!password || password === '') {
       return res.status(400).send('Missing password')
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ $or: [{ email: emailOrUsername }, { username: emailOrUsername }] })
     if (!user) {
-      return res.status(404).send('Invalid email or password')
+      return res.status(404).send('Invalid email, username or password')
     }
     const validPassword = bcrypt.compareSync(password, user.password)
     if (!validPassword) {
-      return res.status(404).send('Invalid email or password')
+      return res.status(404).send('Invalid email, username or password')
     }
 
     const { password: pass, ...rest } = user._doc
