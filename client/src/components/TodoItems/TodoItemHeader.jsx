@@ -1,11 +1,9 @@
-import { BiCalendarEvent, BiCalendarPlus, BiCheckCircle, BiSearchAlt2, BiTime } from 'react-icons/bi'
+import { BiCalendarEvent, BiCheckCircle, BiSearchAlt2, BiTime } from 'react-icons/bi'
 import { TextInput, Tooltip } from 'flowbite-react'
 import { useEffect, useRef } from 'react'
 
 export default function TodoItemHeader({
 	listName,
-	// showInQueueOnly,
-	// setShowInQueueOnly,
 	hideCompleted,
 	setHideCompleted,
 	showOverdueOnly,
@@ -68,28 +66,6 @@ export default function TodoItemHeader({
 						/>
 					</div>
 				</Tooltip>
-				{/* <Tooltip
-					content="Show in queue todos only"
-					style="dark"
-					animation="duration-300"
-					arrow={false}
-					className="bg-gray-800 text-xs"
-				>
-					<div
-						className="hover:bg-gray-200 p-1 rounded-lg"
-						onClick={() => {
-							setShowInQueueOnly(!showInQueueOnly)
-						}}
-					>
-						<BiCalendarPlus
-							size={22}
-							className={
-								'cursor-pointer text-gray-700' +
-								(showInQueueOnly ? ' text-opacity-100' : ' text-opacity-50')
-							}
-						/>
-					</div>
-				</Tooltip> */}
 				<Tooltip
 					content="Show scheduled todos only"
 					style="dark"
