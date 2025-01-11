@@ -71,7 +71,7 @@ export default function TodoItem({
 	}
 
 	return (
-		<li className="cursor-pointer rounded-xl mx-2 transition-all flex justify-between items-center border min-h-11">
+		<li className={`cursor-pointer rounded-xl mx-2 transition-all flex justify-between items-center min-h-11 border ${selectedTodo == todo._id && 'border-gray-700'} $`}>
 			{editing == todo._id ? (
 				<EditItemForm
 					todo={todo}

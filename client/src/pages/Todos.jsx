@@ -69,7 +69,7 @@ export default function Todos() {
 				dragging={dragging}
 				dropZoneRef={dropZoneRef}
 			/>
-			<TodoCalendarView todos={todos} fetchData={fetchData} dragging={dragging} setDragging={setDragging} dropZoneRef={dropZoneRef}/>
+			<TodoCalendarView todos={todos} setSelectedTodo={setSelectedTodo} fetchData={fetchData} dragging={dragging} setDragging={setDragging} dropZoneRef={dropZoneRef}/>
 			<Chatbox fetchData={fetchData}/>
 		</div>
 	)

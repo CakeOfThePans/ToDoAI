@@ -5,12 +5,15 @@ import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import './css/calendarStyles.css'
 import { Checkbox, Label } from 'flowbite-react'
+import { setList } from '../../redux/listSlice'
+
 
 export default function TodoCalendarView({
 	todos,
+	setSelectedTodo,
 	fetchData,
 	setDragging,
 	dropZoneRef,
@@ -23,6 +26,7 @@ export default function TodoCalendarView({
 	const [inputInfo, setInputInfo] = useState(null)
 	const inputRef = useRef(null)
 	const calendarRef = useRef(null)
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		fetchEvents()
@@ -38,6 +42,7 @@ export default function TodoCalendarView({
 					end: todo.endDate,
 					title: todo.task,
 					completed: todo.completed,
+					listId: todo.listId,
 				}
 			})
 			setEvents(events)
@@ -177,6 +182,11 @@ export default function TodoCalendarView({
 		}
 	}
 
+	const handleEventClick = (info) => {
+		setSelectedTodo(info.event.id)
+		dispatch(setList(info.event.extendedProps.listId))
+	}
+
 	return (
 		<div className="bg-white border border-gray-200 flex-grow m-4 rounded-xl p-4 text-nowrap">
 			<FullCalendar
@@ -204,6 +214,7 @@ export default function TodoCalendarView({
 				eventReceive={handleEventUpdate}
 				eventDragStart={handleEventDragStart}
 				eventDragStop={handleEventDragStop}
+				eventClick={handleEventClick}
 			/>
 
 			{inputInfo && (
