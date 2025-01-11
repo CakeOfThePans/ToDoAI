@@ -1,6 +1,6 @@
-import { Tooltip } from 'flowbite-react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { BiPencil, BiTrash } from 'react-icons/bi'
+import { Tooltip, Whisper } from 'rsuite'
 
 export default function TodoOptions({
 	completed,
@@ -12,12 +12,12 @@ export default function TodoOptions({
 	return (
 		<div className="flex items-center gap-2">
 			{!completed && (
-				<Tooltip
-					content="Edit todo"
-					style="dark"
-					animation="duration-300"
-					arrow={false}
-					className="bg-gray-800 text-xs"
+				<Whisper
+					placement="top"
+					trigger="hover"
+					speaker={
+						<Tooltip className="bg-gray-800 text-xs p-2">Edit todo</Tooltip>
+					}
 				>
 					<div className="hover:bg-gray-200 text-gray-600 rounded-lg">
 						<BiPencil
@@ -27,25 +27,27 @@ export default function TodoOptions({
 							}}
 						/>
 					</div>
-				</Tooltip>
+				</Whisper>
 			)}
-			<Tooltip
-				content="Delete todo"
-				style="dark"
-				animation="duration-300"
-				arrow={false}
-				className="bg-gray-800 text-xs"
+			<Whisper
+				placement="top"
+				trigger="hover"
+				speaker={
+					<Tooltip className="bg-gray-800 text-xs p-2">Delete todo</Tooltip>
+				}
 			>
 				<div className="hover:bg-gray-200 text-gray-600 rounded-lg">
 					<BiTrash size={20} onClick={handleDelete} />
 				</div>
-			</Tooltip>
-			<Tooltip
-				content="Close todo options"
-				style="dark"
-				animation="duration-300"
-				arrow={false}
-				className="bg-gray-800 text-xs"
+			</Whisper>
+			<Whisper
+				placement="top"
+				trigger="hover"
+				speaker={
+					<Tooltip className="bg-gray-800 text-xs p-2">
+						Close todo options
+					</Tooltip>
+				}
 			>
 				<div className="flex gap-2 items-center">
 					<AiOutlineCloseCircle
@@ -54,7 +56,7 @@ export default function TodoOptions({
 						onClick={() => setSelectedTodo(null)}
 					/>
 				</div>
-			</Tooltip>
+			</Whisper>
 		</div>
 	)
 }

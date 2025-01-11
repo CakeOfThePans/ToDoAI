@@ -1,6 +1,12 @@
-import { BiCalendarEvent, BiCheckCircle, BiSearchAlt2, BiTime } from 'react-icons/bi'
-import { TextInput, Tooltip } from 'flowbite-react'
+import {
+	BiCalendarEvent,
+	BiCheckCircle,
+	BiSearchAlt2,
+	BiTime,
+} from 'react-icons/bi'
+import { TextInput } from 'flowbite-react'
 import { useEffect, useRef } from 'react'
+import { Tooltip, Whisper } from 'rsuite'
 
 export default function TodoItemHeader({
 	listName,
@@ -44,12 +50,12 @@ export default function TodoItemHeader({
 				</span>
 			)}
 			<div className="flex items-center gap-1">
-				<Tooltip
-					content="Search"
-					style="dark"
-					animation="duration-300"
-					arrow={false}
-					className="bg-gray-800 text-xs"
+				<Whisper
+					placement="top"
+					trigger="hover"
+					speaker={
+						<Tooltip className="bg-gray-800 text-xs p-2">Search</Tooltip>
+					}
 				>
 					<div
 						className="hover:bg-gray-200 p-1 rounded-lg"
@@ -65,13 +71,15 @@ export default function TodoItemHeader({
 							}
 						/>
 					</div>
-				</Tooltip>
-				<Tooltip
-					content="Show scheduled todos only"
-					style="dark"
-					animation="duration-300"
-					arrow={false}
-					className="bg-gray-800 text-xs"
+				</Whisper>
+				<Whisper
+					placement="top"
+					trigger="hover"
+					speaker={
+						<Tooltip className="bg-gray-800 text-xs p-2">
+							Show scheduled todos only
+						</Tooltip>
+					}
 				>
 					<div
 						className="hover:bg-gray-200 p-1 rounded-lg"
@@ -87,13 +95,15 @@ export default function TodoItemHeader({
 							}
 						/>
 					</div>
-				</Tooltip>
-				<Tooltip
-					content="Show completed todos"
-					style="dark"
-					animation="duration-300"
-					arrow={false}
-					className="bg-gray-800 text-xs"
+				</Whisper>
+				<Whisper
+					placement="top"
+					trigger="hover"
+					speaker={
+						<Tooltip className="bg-gray-800 text-xs p-2">
+							Show completed todos
+						</Tooltip>
+					}
 				>
 					<div
 						className="hover:bg-gray-200 p-1 rounded-lg"
@@ -109,13 +119,15 @@ export default function TodoItemHeader({
 							}
 						/>
 					</div>
-				</Tooltip>
-				<Tooltip
-					content="Show overdue todos only"
-					style="dark"
-					animation="duration-300"
-					arrow={false}
-					className="bg-gray-800 text-xs"
+				</Whisper>
+				<Whisper
+					placement="top"
+					trigger="hover"
+					speaker={
+						<Tooltip className="bg-gray-800 text-xs p-2">
+							Show overdue todos only
+						</Tooltip>
+					}
 				>
 					<div
 						className="hover:bg-gray-200 p-1 rounded-lg"
@@ -131,7 +143,7 @@ export default function TodoItemHeader({
 							}
 						/>
 					</div>
-				</Tooltip>
+				</Whisper>
 			</div>
 		</div>
 	)

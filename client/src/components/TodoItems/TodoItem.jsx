@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Checkbox, Label, Tooltip } from 'flowbite-react'
+import { Checkbox, Label } from 'flowbite-react'
 import axios from 'axios'
 import EditItemForm from './EditItemForm'
 import TodoOptions from './TodoOptions'
 import { AiOutlineDownCircle } from 'react-icons/ai'
+import { Tooltip, Whisper } from 'rsuite'
 
 export default function TodoItem({
 	todo,
@@ -16,7 +17,6 @@ export default function TodoItem({
 	inputRef,
 }) {
 	const [completed, setCompleted] = useState(todo.completed)
-	const itemRef = useRef(null)
 
 	useEffect(() => {
 		setCompleted(todo.completed)
@@ -33,7 +33,6 @@ export default function TodoItem({
 			console.log(err)
 		}
 	}
-
 
 	const handleDelete = async () => {
 		try {
@@ -83,7 +82,7 @@ export default function TodoItem({
 				/>
 			) : (
 				<div className="flex flex-col w-full p-2 gap-1">
-					<div className="flex justify-between items-center" ref={itemRef}>
+					<div className="flex justify-between items-center">
 						<div className="flex items-center gap-2 min-w-0">
 							<Checkbox
 								className="focus:outline-none focus:ring-0 text-gray-700"
@@ -116,19 +115,23 @@ export default function TodoItem({
 								<span className="opacity-75">
 									{convertMinutesToTime(todo.duration)}
 								</span>
-								<Tooltip
-									content="Show todo options"
-									style="dark"
-									animation="duration-300"
-									arrow={false}
-									className="bg-gray-800 text-xs"
+								<Whisper
+									placement="top"
+									trigger="hover"
+									speaker={
+										<Tooltip className="bg-gray-800 text-xs p-2">
+											Open todo options
+										</Tooltip>
+									}
 								>
-									<AiOutlineDownCircle
-										size={20}
-										className="text-gray-600"
-										onClick={() => setSelectedTodo(todo._id)}
-									/>
-								</Tooltip>
+									<div>
+										<AiOutlineDownCircle
+											size={20}
+											className="text-gray-600"
+											onClick={() => setSelectedTodo(todo._id)}
+										/>
+									</div>
+								</Whisper>
 							</div>
 						)}
 					</div>
