@@ -1,8 +1,9 @@
 import express from 'express'
-import { handleMessage } from '../controllers/aiController.js'
+import { handleMessage, confirm } from '../controllers/aiController.js'
 
 const router = express.Router()
 
-router.post('/', handleMessage)
+router.post('/message', handleMessage)
+router.post('/confirm', confirm)
 
 export default router

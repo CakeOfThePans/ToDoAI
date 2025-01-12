@@ -90,7 +90,7 @@ export const handleMessage = async (req, res) => {
 			current_list: req.body.current_list,
 		})
 		// console.log(output)
-		const message = await doAction(req, output)
+		const message = await validateOutput(req, output)
 		return res.send(message)
 	} catch (err) {
         console.log(err.message)
@@ -98,9 +98,72 @@ export const handleMessage = async (req, res) => {
 	}
 }
 
-const doAction = async (req, output) => {
+const validateOutput = async (req, output) => {
 	try {
 		const data = output.todo
+		let list
+		let todo
+		//if given list name check that the user has a list with that list name
+		if (data.listName) {
+			list = await List.findOne({ userId: req.user.id, name: data.listName })
+			if (!list)
+				return {valid: false, message: `I'm sorry but I cannot find the list named '${data.listName}'`}
+		}
+		//otherwise default to current list
+		else {
+			list = await List.findById(data.listId)
+			if (!list || list.userId != req.user.id)
+				return {valid: false, message: `I'm sorry but I cannot find the specified list. Please reselect a list or input a list name.`}
+		}
+		output.todo.listName = list.name
+
+		switch (output.action) {
+			case 'unrecognized':
+				return {valid: false, message: `I'm sorry but I cannot assist you with that request. Please specify to create, update, or delete a todo.`}
+			case 'create':
+				//no checks needed for creating a todo
+				break
+			case 'update':
+				todo = await Todo.findOne({
+					userId: req.user.id,
+					listId: list._id,
+					task: data.task,
+				})
+				if (!todo) {
+					return {valid: false, message: `I'm sorry but I cannot find the todo with task '${data.task}' in #${list.name}`}
+				}
+				break
+			case 'delete':
+				todo = await Todo.findOne({
+					userId: req.user.id,
+					listId: list.id,
+					task: data.task,
+				})
+				if (!todo) {
+					return {valid: false, message: `I'm sorry but I cannot find the todo with task '${data.task}' in #${list.name}`}
+				}
+				break
+		}
+		return {valid: true, output: output}
+	} catch (err) {
+		console.log(err.message)
+		return {valid: false, message: 'Something went wrong. Please try again later.'}
+	}
+}
+
+export const confirm = async (req, res) => {
+	try{
+		const message = await doAction(req.body.info, req)
+		return res.send(message)
+	}
+	catch(err){
+		console.log(err.message)
+	}
+}
+
+const doAction = async (info, req) => {
+	try {
+		const data = info.todo
 		let list
 		let todo
 		//if given list name check that the user has a list with that list name
@@ -116,7 +179,7 @@ const doAction = async (req, output) => {
 				return `I'm sorry but I cannot find the specified list. Please reselect a list or input a list name.`
 		}
 
-		switch (output.action) {
+		switch (info.action) {
 			case 'unrecognized':
 				return `I'm sorry but I cannot assist you with that request. Please specify to create, update, or delete a todo.`
 			case 'create':
@@ -125,12 +188,12 @@ const doAction = async (req, output) => {
 					listId: list._id,
 					task: data.task,
 					completed: data.completed,
-					// queue: false,
 					order: list.count,
 					duration: data.duration ? data.duration : 30,
 					startDate: data.startDate,
 					endDate: data.endDate,
 					scheduled: data.startDate ? true : false,
+					color: list.color,
 				})
 				todo = await todo.save()
 
