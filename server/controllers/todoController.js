@@ -122,7 +122,8 @@ export const createTodo = async (req, res) => {
             duration: req.body.duration,
             startDate: req.body.startDate,
             endDate: req.body.endDate,
-            scheduled: req.body.scheduled
+            scheduled: req.body.scheduled,
+            color : list.color
         })
 		todo = await todo.save()
 

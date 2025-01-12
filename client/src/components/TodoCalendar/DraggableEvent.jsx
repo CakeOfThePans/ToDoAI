@@ -1,7 +1,7 @@
 import { Draggable, ThirdPartyDraggable } from '@fullcalendar/interaction'
 import { useEffect, useRef } from 'react'
 
-export default function DraggableEvent({ id, title, duration, children }) {
+export default function DraggableEvent({ id, title, duration, backgroundColor, children }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -13,6 +13,8 @@ export default function DraggableEvent({ id, title, duration, children }) {
         id: id,
         title: title,
         duration: minutesToHHMM(duration),  //must put duration in HH:MM format
+        backgroundColor: backgroundColor,
+        borderColor: backgroundColor
       };
     },
   });

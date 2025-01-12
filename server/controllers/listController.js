@@ -29,6 +29,7 @@ export const createList = async (req, res) => {
 			name: req.body.name,
 			userId: req.user.id,
 			order: numLists + 1,
+			color: "#039BE5"	//default color
 		})
 		list = await list.save()
 		res.send(list)
@@ -68,6 +69,29 @@ export const updateListName = async (req, res) => {
 		}
 		currentList.name = req.body.name
 		await currentList.save()
+		return res.send(currentList)
+	} catch (err) {
+		res.status(500).send(err.message)
+	}
+}
+
+export const updateColor = async (req, res) => {
+	try {
+		let currentList = await List.findById(req.params.listId)
+		if (!req.body.color) {
+			return res.status(400).send('Invalid color')
+		}
+		if (!currentList) {
+			return res.status(400).send('Invalid list ID')
+		}
+		//if it's a different color and a valid hex color
+		if(currentList.color != req.body.color && /^#[0-9A-Fa-f]{6}$/.test(req.body.color)) {
+			currentList.color = req.body.color
+			await currentList.save()
+
+			//now update the todos in the list
+			await Todo.updateMany({ listId: req.params.listId }, { color : req.body.color })
+		}
 		return res.send(currentList)
 	} catch (err) {
 		res.status(500).send(err.message)

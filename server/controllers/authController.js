@@ -38,7 +38,8 @@ export const signUp = async (req, res) => {
     let defaultList = new List({
       userId: user._id,
       name: 'Inbox',
-      order: 1
+      order: 1,
+      color: "#039BE5"	//default color
     })
     defaultList = await defaultList.save()
     user.defaultList = defaultList._id

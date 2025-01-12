@@ -42,6 +42,10 @@ const todoSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    color: {
+        type: String,
+        required: true
     }
 })
 

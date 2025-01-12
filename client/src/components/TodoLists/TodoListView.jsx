@@ -8,7 +8,7 @@ import TodoList from './TodoList'
 import DefaultTodoList from './DefaultTodoList'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-export default function TodoListView({ todos }) {
+export default function TodoListView({ todos, fetchTodoData }) {
 	const { currentList } = useSelector((state) => state.list)
 	const [defaultLists, setDefaultLists] = useState([])
 	const [lists, setLists] = useState([])
@@ -104,6 +104,7 @@ export default function TodoListView({ todos }) {
 													<TodoList
 														list={list}
 														fetchData={fetchData}
+														fetchTodoData={fetchTodoData}
 														handleClick={handleClick}
 														currentList={currentList}
 														editing={editing}

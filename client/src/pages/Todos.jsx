@@ -51,7 +51,7 @@ export default function Todos() {
 
 	return (
 		<div className="flex h-full bg-gray-50">
-			<TodoListView todos={todos} />
+			<TodoListView todos={todos} fetchTodoData={fetchData} />
 			<TodoItemView
 				todos={todos}
 				setTodos={setTodos}

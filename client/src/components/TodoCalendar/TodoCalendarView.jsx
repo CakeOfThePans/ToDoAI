@@ -43,6 +43,7 @@ export default function TodoCalendarView({
 					title: todo.task,
 					completed: todo.completed,
 					listId: todo.listId,
+					color: todo.color,
 				}
 			})
 			setEvents(events)
@@ -63,8 +64,9 @@ export default function TodoCalendarView({
 		}
 	}
 
+	// Render the event content
 	const renderEventContent = (eventContent) => {
-		const { completed } = eventContent.event.extendedProps
+		const { completed, color } = eventContent.event.extendedProps
 
 		return (
 			<div className="flex items-center px-1 gap-2 h-full">
@@ -82,6 +84,15 @@ export default function TodoCalendarView({
 			</div>
 		)
 	}
+
+	// Set the background color of the event (doesn't work when using eventContent since that's the inner element)
+	const eventDidMount = (info) => {
+        const { color } = info.event.extendedProps;
+        info.el.style.backgroundColor = color;
+        info.el.style.borderColor = color;
+        info.el.style.padding = '0'; // Remove padding
+        info.el.style.margin = '0'; // Remove margin
+    };
 
 	const handleEventDragStart = () => {
 		setDragging(true)
@@ -215,6 +226,7 @@ export default function TodoCalendarView({
 				eventDragStart={handleEventDragStart}
 				eventDragStop={handleEventDragStop}
 				eventClick={handleEventClick}
+				eventDidMount={eventDidMount}
 			/>
 
 			{inputInfo && (

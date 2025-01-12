@@ -18,6 +18,10 @@ const listSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0
+    },
+    color: {
+        type: String,
+        required: true
     }
 })
 

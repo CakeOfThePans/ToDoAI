@@ -63,7 +63,7 @@ export default function TodoItemView({
 		<>
 			{dragging == true ? (
 				<div
-					className="z-50 flex items-center justify-center bg-gray-100 border border-gray-200 w-[444px] m-4 rounded-xl"
+					className="z-50 flex items-center justify-center bg-gray-100 border border-gray-200 w-[500px] m-4 rounded-xl"
 					ref={dropZoneRef}
 				>
 					<p className="text-gray-600 text-xl">Drop todos here to unschedule them</p>
@@ -109,6 +109,7 @@ export default function TodoItemView({
 															id={todo._id}
 															title={todo.task}
 															duration={todo.duration}
+															backgroundColor={todo.color}
 														>
 															<TodoItem
 																todo={todo}
