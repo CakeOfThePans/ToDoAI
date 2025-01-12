@@ -26,6 +26,7 @@ export default function TodoCalendarView({
 	const [inputInfo, setInputInfo] = useState(null)
 	const inputRef = useRef(null)
 	const calendarRef = useRef(null)
+	const [inListView, setInListView] = useState(false)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -53,32 +54,13 @@ export default function TodoCalendarView({
 		}
 	}
 
-	const handleToggleCompleted = async (e, completed) => {
-		try {
-			await axios.put(`/api/todos/${e.target.id}`, {
-				completed: !completed,
-			})
-			fetchData()
-		} catch (err) {
-			console.log(err)
-		}
-	}
-
 	// Render the event content
 	const renderEventContent = (eventContent) => {
-		const { completed, color } = eventContent.event.extendedProps
+		const { completed } = eventContent.event.extendedProps
 
 		return (
 			<div className="flex items-center px-1 gap-2 h-full">
-				<Checkbox
-					className="focus:outline-none focus:ring-0 text-gray-700"
-					style={{ boxShadow: 'none' }}
-					checked={completed || false}
-					onClick={(e) => handleToggleCompleted(e, completed)}
-					readOnly
-					id={eventContent.event.id}
-				/>
-				<Label className="text-sm truncate text-wrap text-white overflow-hidden whitespace-normal max-h-full">
+				<Label className={`text-sm truncate text-wrap overflow-hidden whitespace-normal max-h-full ${inListView ? 'text-black' : 'text-white' } ${completed && 'line-through'}`}>
 					{eventContent.event.title}
 				</Label>
 			</div>
@@ -92,6 +74,15 @@ export default function TodoCalendarView({
         info.el.style.borderColor = color;
         info.el.style.padding = '0'; // Remove padding
         info.el.style.margin = '0'; // Remove margin
+
+		// Check if the current view is list view and change the text color to black
+        const calendarApi = calendarRef.current.getApi();
+        if(calendarApi.view.type === 'listWeek') {
+            setInListView(true);
+        }
+		else{
+			setInListView(false);
+		}
     };
 
 	const handleEventDragStart = () => {
