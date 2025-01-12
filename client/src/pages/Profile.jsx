@@ -64,13 +64,13 @@ export default function Profile() {
 				<TextInput
 					type="text"
 					id="username"
-					placeholder="username"
+					placeholder="Username"
 					onChange={handleChange}
 				/>
 				<TextInput
 					type="text"
 					id="email"
-					placeholder="email"
+					placeholder="Email"
 					defaultValue={currentUser.email}
 					onChange={handleChange}
 				/>
