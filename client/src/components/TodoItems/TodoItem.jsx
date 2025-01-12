@@ -43,6 +43,16 @@ export default function TodoItem({
 		}
 	}
 
+	const handleDuplicate = async () => {
+		try {
+			await axios.post(`/api/todos/duplicate/${todo._id}`)
+			fetchData()
+			setSelectedTodo(null)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	function convertMinutesToTime(minutes) {
 		const hours = Math.floor(minutes / 60)
 		const mins = minutes % 60
@@ -98,6 +108,7 @@ export default function TodoItem({
 								setEditing={setEditing}
 								setSelectedTodo={setSelectedTodo}
 								handleDelete={handleDelete}
+								handleDuplicate={handleDuplicate}
 								todo={todo}
 							/>
 						) : (

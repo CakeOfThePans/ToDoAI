@@ -187,6 +187,41 @@ export const updateTodo = async (req, res) => {
 	}
 }
 
+export const duplicateTodo = async (req, res) => {
+    try{
+        const todo = await Todo.findById(req.params.todoId)
+        if(!todo){
+            return res.status(400).send("Invalid Todo ID")
+        }
+
+        //first update the list and move everything forward by 1 to make space for the new todo
+        let list = await List.findById(todo.listId)
+		list.count++
+		list = await list.save()
+
+        await Todo.updateMany(
+            { listId: todo.listId, order: { $gte: todo.order + 1 } },
+            { $inc: { order: 1 } }
+        )
+
+        let copy = new Todo({
+            userId: req.user.id,
+            listId: todo.listId,
+            task: todo.task,
+            notes: todo.notes,
+            completed: false,
+            order: todo.order + 1,
+            duration: todo.duration,
+            color: todo.color
+        })
+        copy = await copy.save()
+        return res.send(copy)        
+    }
+    catch(err){
+        res.status(500).send(err.message)
+    }
+}
+
 export const deleteTodo = async (req, res) => {
 	try {
         const currentTodo = await Todo.findById(req.params.todoId)

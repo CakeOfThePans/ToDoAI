@@ -1,5 +1,5 @@
 import { AiOutlineCloseCircle } from 'react-icons/ai'
-import { BiPencil, BiTrash } from 'react-icons/bi'
+import { BiPencil, BiTrash, BiCopy } from 'react-icons/bi'
 import { Tooltip, Whisper } from 'rsuite'
 
 export default function TodoOptions({
@@ -7,6 +7,7 @@ export default function TodoOptions({
 	setEditing,
 	setSelectedTodo,
 	handleDelete,
+	handleDuplicate,
 	todo,
 }) {
 	return (
@@ -29,6 +30,17 @@ export default function TodoOptions({
 					</div>
 				</Whisper>
 			)}
+			<Whisper
+				placement="top"
+				trigger="hover"
+				speaker={
+					<Tooltip className="bg-gray-800 text-xs p-2">Duplicate todo</Tooltip>
+				}
+			>
+				<div className="hover:bg-gray-200 text-gray-600 rounded-lg">
+					<BiCopy size={20} onClick={handleDuplicate} />
+				</div>
+			</Whisper>
 			<Whisper
 				placement="top"
 				trigger="hover"

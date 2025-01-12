@@ -44,6 +44,7 @@ export default function Todos() {
 				setListName(res2.data.name)
 			}
 			setTodos(res.data)
+			console.log(res.data)
 		} catch (err) {
 			console.log(err)
 		}
