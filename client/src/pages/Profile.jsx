@@ -26,7 +26,7 @@ export default function Profile() {
 		setErrorMessage(null)
 		try {
 			const res = await axios.put(
-				`/api/users/update/${currentUser._id}`,
+				`/api/users/${currentUser._id}`,
 				formData
 			)
 			dispatch(setUser(res.data))
@@ -40,7 +40,7 @@ export default function Profile() {
 	const handleDeleteUser = async () => {
 		setShowModal(false)
 		try {
-			await axios.delete(`/api/users/delete/${currentUser._id}`)
+			await axios.delete(`/api/users/${currentUser._id}`)
 			await axios.post(`/api/auth/sign-out`)
 			dispatch(removeUser())
 			dispatch(setList(null))
