@@ -4,6 +4,7 @@ import axios from 'axios'
 
 export default function EditListForm({ list, setEditing, fetchData, inputRef }) {
 	const [newList, setNewList] = useState(list.name)
+	const [clicked, setClicked] = useState(false)
 
 	useEffect(() => {
 		if(inputRef && inputRef.current){
@@ -13,15 +14,18 @@ export default function EditListForm({ list, setEditing, fetchData, inputRef }) 
 
 	const handleEdit = async (e) => {
 		e.preventDefault()
+		setClicked(true)
 		try {
 			await axios.put(`/api/lists/${list._id}`, {
 				name: newList,
 			})
 			setNewList('')
 			setEditing(null)
-      fetchData()
+			setClicked(false)
+      		fetchData()
 		} catch (err) {
 			console.log(err)
+			setClicked(false)
 		}
 	}
 
@@ -44,7 +48,7 @@ export default function EditListForm({ list, setEditing, fetchData, inputRef }) 
 				>
 					Cancel
 				</Button>
-				<Button color="gray" className="w-full focus:ring-0" onClick={handleEdit}>
+				<Button color="gray" className="w-full focus:ring-0" onClick={!clicked ? handleEdit : null}>
 					Update
 				</Button>
 			</div>

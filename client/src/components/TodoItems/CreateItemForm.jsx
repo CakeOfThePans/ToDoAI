@@ -21,6 +21,7 @@ export default function CreateItemForm({
 	const [selectedDate, setSelectedDate] = useState(null)
 	const [selectedTime, setSelectedTime] = useState(null)
 	const [selectedDuration, setSelectedDuration] = useState(30)
+	const [clicked, setClicked] = useState(false)
 
 	const durationOptions = [
 		...Array.from({ length: 25 }, (_, i) => i * 15)
@@ -46,6 +47,7 @@ export default function CreateItemForm({
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
+		setClicked(true)
 		try {
 			if (!newTodo) return
 
@@ -79,8 +81,10 @@ export default function CreateItemForm({
 			setNotes('')
 			setCreating(false)
 			fetchData()
+			setClicked(false)
 		} catch (err) {
 			console.log(err)
+			setClicked(false)
 		}
 	}
 
@@ -180,7 +184,7 @@ export default function CreateItemForm({
 					>
 						Cancel
 					</Button>
-					<Button color="gray" className="w-full focus:ring-0" onClick={handleSubmit}>
+					<Button color="gray" className="w-full focus:ring-0" onClick={!clicked ? handleSubmit : null}>
 						Create
 					</Button>
 				</div>

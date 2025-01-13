@@ -4,6 +4,7 @@ import axios from 'axios'
 
 export default function CreateListForm({ setCreating, fetchData, inputRef }) {
     const [newList, setNewList] = useState('')
+    const [clicked, setClicked] = useState(false)
 
     useEffect(() => {
       if(inputRef && inputRef.current){
@@ -13,6 +14,7 @@ export default function CreateListForm({ setCreating, fetchData, inputRef }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setClicked(true)
         try {
           if (!newList) return
           await axios.post('/api/lists', {
@@ -21,8 +23,10 @@ export default function CreateListForm({ setCreating, fetchData, inputRef }) {
           setNewList('')
           setCreating(false)
           fetchData()
+          setClicked(false)
         } catch (err) {
           console.log(err)
+          setClicked(false)
         }
       }
 
@@ -38,7 +42,7 @@ export default function CreateListForm({ setCreating, fetchData, inputRef }) {
             />
             <div className="mt-2 flex gap-2 justify-center items-center">
                 <Button color="gray" className="w-full focus:ring-0" onClick={() => {setCreating(false); setNewList('')}}>Cancel</Button>
-                <Button color="gray" className="w-full focus:ring-0" onClick={handleSubmit}>Create</Button>
+                <Button color="gray" className="w-full focus:ring-0" onClick={!clicked ? handleSubmit : null}>Create</Button>
             </div>
         </form>
       </div>

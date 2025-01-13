@@ -16,12 +16,14 @@ export default function Profile() {
 		email: currentUser.email,
 		password: '',
 	})
+	const [clicked, setClicked] = useState(false)
 	const dispatch = useDispatch()
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.id]: e.target.value })
 	}
 	const handleSubmit = async (e) => {
 		e.preventDefault()
+		setClicked(true)
 		setUserUpdateSuccess(null)
 		setErrorMessage(null)
 		try {
@@ -32,20 +34,25 @@ export default function Profile() {
 			dispatch(setUser(res.data))
 			setUserUpdateSuccess('User updated successfully')
 			setFormData({ ...formData, password: '' })
+			setClicked(false)
 		} catch (err) {
 			setErrorMessage(err.response.data)
 			setFormData({ ...formData, password: '' })
+			setClicked(false)
 		}
 	}
 	const handleDeleteUser = async () => {
+		setClicked(true)
 		setShowModal(false)
 		try {
 			await axios.delete(`/api/users/${currentUser._id}`)
 			await axios.post(`/api/auth/sign-out`)
 			dispatch(removeUser())
 			dispatch(setList(null))
+			setClicked(false)
 		} catch (err) {
 			setErrorMessage(err.response.data)
+			setClicked(false)
 		}
 	}
 	const handleSignout = async () => {
@@ -60,7 +67,7 @@ export default function Profile() {
 	return (
 		<div className="mx-auto my-auto p-3 max-w-lg">
 			<h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-			<form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+			<form className="flex flex-col gap-8" onSubmit={!clicked ? handleSubmit : null}>
 				<TextInput
 					type="text"
 					autoComplete='off'
@@ -128,7 +135,7 @@ export default function Profile() {
 							<Button Button color="gray" onClick={() => setShowModal(false)}>
 								No, cancel
 							</Button>
-							<Button color="failure" onClick={handleDeleteUser}>
+							<Button color="failure" onClick={!clicked ? handleDeleteUser : null}>
 								Yes, I'm sure
 							</Button>
 						</div>

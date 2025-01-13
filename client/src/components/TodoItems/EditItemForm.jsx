@@ -25,6 +25,7 @@ export default function EditItemForm({
 		todo.startDate ? new Date(todo.startDate) : null
 	)
 	const [selectedDuration, setSelectedDuration] = useState(todo.duration)
+	const [clicked, setClicked] = useState(false)
 
 	const durationOptions = [
 		...Array.from({ length: 25 }, (_, i) => i * 15)
@@ -50,6 +51,7 @@ export default function EditItemForm({
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
+		setClicked(true)
 		try {
 			if (!newTodo) return
 
@@ -85,8 +87,10 @@ export default function EditItemForm({
 			setNotes('')
 			setEditing(null)
 			fetchData()
+			setClicked(false)
 		} catch (err) {
 			console.log(err)
+			setClicked(false)
 		}
 	}
 
@@ -188,7 +192,7 @@ export default function EditItemForm({
 				<Button
 					color="gray"
 					className="w-full focus:ring-0"
-					onClick={handleSubmit}
+					onClick={!clicked ? handleSubmit : null}
 				>
 					Update
 				</Button>
