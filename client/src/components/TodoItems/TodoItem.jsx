@@ -17,6 +17,7 @@ export default function TodoItem({
 	inputRef,
 }) {
 	const [completed, setCompleted] = useState(todo.completed)
+	const [clicked, setClicked] = useState(false)
 
 	useEffect(() => {
 		setCompleted(todo.completed)
@@ -36,8 +37,10 @@ export default function TodoItem({
 
 	const handleDelete = async () => {
 		try {
+			setClicked(true)
 			await axios.delete(`/api/todos/${todo._id}`)
 			fetchData()
+			setClicked(false)
 		} catch (err) {
 			console.log(err)
 		}
@@ -45,9 +48,11 @@ export default function TodoItem({
 
 	const handleDuplicate = async () => {
 		try {
+			setClicked(true)
 			await axios.post(`/api/todos/duplicate/${todo._id}`)
 			fetchData()
 			setSelectedTodo(null)
+			setClicked(false)
 		} catch (err) {
 			console.log(err)
 		}
@@ -105,6 +110,7 @@ export default function TodoItem({
 						{selectedTodo == todo._id ? (
 							<TodoOptions
 								completed={completed}
+								clicked={clicked}
 								setEditing={setEditing}
 								setSelectedTodo={setSelectedTodo}
 								handleDelete={handleDelete}

@@ -4,12 +4,14 @@ import { Tooltip, Whisper } from 'rsuite'
 
 export default function TodoOptions({
 	completed,
+	clicked,
 	setEditing,
 	setSelectedTodo,
 	handleDelete,
 	handleDuplicate,
 	todo,
 }) {
+	
 	return (
 		<div className="flex items-center gap-2">
 			{!completed && (
@@ -38,7 +40,7 @@ export default function TodoOptions({
 				}
 			>
 				<div className="hover:bg-gray-200 text-gray-600 rounded-lg">
-					<BiCopy size={20} onClick={handleDuplicate} />
+					<BiCopy size={20} onClick={!clicked ? handleDuplicate : null} />
 				</div>
 			</Whisper>
 			<Whisper
@@ -49,7 +51,7 @@ export default function TodoOptions({
 				}
 			>
 				<div className="hover:bg-gray-200 text-gray-600 rounded-lg">
-					<BiTrash size={20} onClick={handleDelete} />
+					<BiTrash size={20} onClick={!clicked ? handleDelete : null} />
 				</div>
 			</Whisper>
 			<Whisper
