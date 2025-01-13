@@ -63,12 +63,15 @@ export default function Profile() {
 			<form className="flex flex-col gap-8" onSubmit={handleSubmit}>
 				<TextInput
 					type="text"
+					autoComplete='off'
 					id="username"
 					placeholder="Username"
+					defaultValue={currentUser.username}
 					onChange={handleChange}
 				/>
 				<TextInput
 					type="text"
+					autoComplete='off'
 					id="email"
 					placeholder="Email"
 					defaultValue={currentUser.email}
@@ -76,6 +79,7 @@ export default function Profile() {
 				/>
 				<TextInput
 					type="password"
+					autoComplete='off'
 					id="password"
 					placeholder="New password"
 					value={formData.password}
