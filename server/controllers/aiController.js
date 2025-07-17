@@ -7,7 +7,7 @@ import { Todo } from '../models/todo.js'
 
 const model = new ChatGoogleGenerativeAI({
 	apiKey: process.env.GOOGLE_API_KEY,
-	model: 'gemini-1.5-pro',
+	model: 'gemini-2.0-flash',
 	temperature: 0,
 	maxRetries: 1,
 })
@@ -93,8 +93,8 @@ export const handleMessage = async (req, res) => {
 		const message = await validateOutput(req, output)
 		return res.send(message)
 	} catch (err) {
-        console.log(err.message)
-		return res.send('Something went wrong. Please try again later.')
+      console.log(err.message)
+		return res.send({valid: false, message: 'Something went wrong. Please try again later.'})
 	}
 }
 

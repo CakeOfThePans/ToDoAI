@@ -20,7 +20,7 @@ export default function Chatbox({ fetchData }) {
 			sender: 'ai',
 		},
 	])
-	const lastMessageRef = useRef(null);
+	const lastMessageRef = useRef(null)
 	const [input, setInput] = useState('')
 	const inputRef = useRef(null)
 
@@ -32,10 +32,10 @@ export default function Chatbox({ fetchData }) {
 
 	//auto scroll to the lowest message
 	useEffect(() => {
-        if (lastMessageRef.current) {
-            lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages]);
+		if (lastMessageRef.current) {
+			lastMessageRef.current.scrollIntoView({ behavior: 'smooth' })
+		}
+	}, [messages])
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -56,7 +56,7 @@ export default function Chatbox({ fetchData }) {
 					input: text,
 				})
 				//use new messages both fail and success
-				if (res.data.valid === false) {
+				if (res.data && res.data.valid === false) {
 					setMessages((previousMessages) => [
 						...previousMessages.slice(0, -1), //remove loading
 						{ text: res.data.message, sender: 'ai' },
@@ -94,7 +94,7 @@ export default function Chatbox({ fetchData }) {
 			case 'update':
 				text = `Are you sure you want to update the task '${todo.task}'`
 				if (todo.listName) text += ` in the list '#${todo.listName}'`
-				text+= ` to: \n\n'${todo.newTask}'`
+				text += ` to: \n\n'${todo.newTask}'`
 				if (todo.startDate) text += ` on ${dateToWords(todo.startDate)}`
 				if (todo.duration) text += ` for ${todo.duration} minutes`
 				break
@@ -107,21 +107,21 @@ export default function Chatbox({ fetchData }) {
 	}
 
 	const dateToWords = (dateString) => {
-        const date = new Date(dateString);
+		const date = new Date(dateString)
 
-        const options = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            timeZone: 'America/New_York',
-            timeZoneName: 'short',
-        };
+		const options = {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+			timeZone: 'America/New_York',
+			timeZoneName: 'short',
+		}
 
-        return new Intl.DateTimeFormat('en-US', options).format(date);
-    };
+		return new Intl.DateTimeFormat('en-US', options).format(date)
+	}
 
 	const handleConfirm = async () => {
 		try {
