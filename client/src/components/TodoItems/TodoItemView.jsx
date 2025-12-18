@@ -22,12 +22,13 @@ export default function TodoItemView({
 	showScheduledOnly,
 	setShowScheduledOnly,
 	dragging,
-	dropZoneRef
+	dropZoneRef,
 }) {
 	const defaultLists = ['Today', 'Upcoming']
 	const [searching, setSearching] = useState(false)
 	const [creating, setCreating] = useState(false)
 	const [editing, setEditing] = useState(null) //only one todo can be edited at a time
+	const [isUpdatingOrder, setIsUpdatingOrder] = useState(false)
 	const inputRef = useRef(null)
 
 	useEffect(() => {
@@ -43,6 +44,8 @@ export default function TodoItemView({
 		const { source, destination } = result
 		if (source.index == destination.index) return
 
+		setIsUpdatingOrder(true)
+
 		const items = Array.from(todos)
 		const [movedList] = items.splice(source.index, 1)
 		items.splice(destination.index, 0, movedList)
@@ -56,6 +59,8 @@ export default function TodoItemView({
 			fetchData() //refetch data in case anything is off (mainly for any header options)
 		} catch (err) {
 			console.log(err)
+		} finally {
+			setIsUpdatingOrder(false)
 		}
 	}
 
@@ -63,13 +68,17 @@ export default function TodoItemView({
 		<>
 			{dragging == true ? (
 				<div
-					className="z-50 flex items-center justify-center bg-gray-100 border border-gray-200 w-[500px] m-4 rounded-xl"
+					className="z-50 flex items-center justify-center bg-gray-100 border border-gray-200 w-[500px] my-4 rounded-xl h-full"
 					ref={dropZoneRef}
 				>
-					<p className="text-gray-600 text-xl">Drop todos here to unschedule them</p>
+					<p className="text-gray-600 text-xl">
+						Drop todos here to unschedule them
+					</p>
 				</div>
 			) : (
-				<div className="flex flex-col bg-white border border-gray-200 w-[500px] m-4 rounded-xl">
+				<div
+					className={`flex flex-col bg-white border border-gray-200 w-full my-4 rounded-xl h-full`}
+				>
 					<TodoItemHeader
 						listName={listName}
 						hideCompleted={hideCompleted}
@@ -82,74 +91,79 @@ export default function TodoItemView({
 						setShowScheduledOnly={setShowScheduledOnly}
 						fetchData={fetchData}
 					/>
-					<DragDropContext onDragEnd={handleDragEnd}>
-						<Droppable droppableId="droppable">
-							{(provided) => (
-								<ul
-									className="overflow-y-auto list-none my-2"
-									ref={provided.innerRef}
-									{...provided.droppableProps}
-								>
-									{todos.map((todo, index) => {
-										return (
-											<Draggable
-												key={todo._id}
-												draggableId={todo._id}
-												index={index}
-												isDragDisabled={defaultLists.includes(currentList)}
-											>
-												{(provided) => (
-													<div
-														ref={provided.innerRef}
-														{...provided.draggableProps}
-														{...provided.dragHandleProps}
-														className="mb-1 react-draggable custom-mirror"
-													>
-														<DraggableEvent
-															id={todo._id}
-															title={todo.task}
-															duration={todo.duration}
-															backgroundColor={todo.color}
+					<div className="min-h-0 flex flex-col">
+						<DragDropContext onDragEnd={handleDragEnd}>
+							<Droppable droppableId="droppable">
+								{(provided) => (
+									<ul
+										className="overflow-y-auto list-none flex-1 min-h-0 px-2 my-2"
+										ref={provided.innerRef}
+										{...provided.droppableProps}
+									>
+										{todos.map((todo, index) => {
+											return (
+												<Draggable
+													key={todo._id}
+													draggableId={todo._id}
+													index={index}
+													isDragDisabled={
+														defaultLists.includes(currentList) ||
+														isUpdatingOrder
+													}
+												>
+													{(provided) => (
+														<div
+															ref={provided.innerRef}
+															{...provided.draggableProps}
+															{...provided.dragHandleProps}
+															className="mb-1 react-draggable custom-mirror"
 														>
-															<TodoItem
-																todo={todo}
-																selectedTodo={selectedTodo}
-																setSelectedTodo={setSelectedTodo}
-																fetchData={fetchData}
-																key={todo._id}
-																currentList={currentList}
-																editing={editing}
-																setEditing={setEditing}
-																inputRef={inputRef}
-															/>
-														</DraggableEvent>
-													</div>
-												)}
-											</Draggable>
-										)
-									})}
-									{provided.placeholder}
-								</ul>
-							)}
-						</Droppable>
-					</DragDropContext>
-					{!defaultLists.includes(currentList) &&
-						(creating ? (
-							<CreateItemForm
-								setCreating={setCreating}
-								fetchData={fetchData}
-								currentList={currentList}
-								inputRef={inputRef}
-							/>
-						) : (
-							<Button
-								color="light"
-								className="mx-2 mb-4"
-								onClick={() => setCreating(true)}
-							>
-								+ Create New Todo
-							</Button>
-						))}
+															<DraggableEvent
+																id={todo._id}
+																title={todo.task}
+																duration={todo.duration}
+																backgroundColor={todo.color}
+															>
+																<TodoItem
+																	todo={todo}
+																	selectedTodo={selectedTodo}
+																	setSelectedTodo={setSelectedTodo}
+																	fetchData={fetchData}
+																	key={todo._id}
+																	currentList={currentList}
+																	editing={editing}
+																	setEditing={setEditing}
+																	inputRef={inputRef}
+																/>
+															</DraggableEvent>
+														</div>
+													)}
+												</Draggable>
+											)
+										})}
+										{provided.placeholder}
+									</ul>
+								)}
+							</Droppable>
+						</DragDropContext>
+						{!defaultLists.includes(currentList) &&
+							(creating ? (
+								<CreateItemForm
+									setCreating={setCreating}
+									fetchData={fetchData}
+									currentList={currentList}
+									inputRef={inputRef}
+								/>
+							) : (
+								<Button
+									color="light"
+									className="mx-2 mb-4"
+									onClick={() => setCreating(true)}
+								>
+									+ Create New Todo
+								</Button>
+							))}
+					</div>
 				</div>
 			)}
 		</>

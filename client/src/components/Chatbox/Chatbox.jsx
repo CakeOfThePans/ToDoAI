@@ -1,6 +1,11 @@
-import { Avatar, Button, TextInput } from 'flowbite-react'
+import { Button, TextInput } from 'flowbite-react'
 import { useEffect, useRef, useState } from 'react'
-import { BiSend, BiSolidTrash } from 'react-icons/bi'
+import {
+	HiChat,
+	HiX,
+	HiPaperAirplane,
+	HiInformationCircle,
+} from 'react-icons/hi'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
@@ -12,28 +17,27 @@ export default function Chatbox({ fetchData }) {
 	const [data, setData] = useState(null)
 	const [messages, setMessages] = useState([
 		{
-			text: `	Hello! I'm your AI assistant here to help you manage your todos. You can ask me to create, update, or delete tasks from your todo list. For example: \n
-					To create a task, you can say: "Add 'Read a book' to the list 'Inbox' at 2:00pm tomorrow for 45 minutes". You can also leave out details like the list, time, date, or duration—they're optional! 
-					
-					Let's get started! What would you like to do?
-				`,
+			text: `Hello! I'm your AI assistant here to help you manage your todos. You can ask me to create, update, or delete tasks from your todo list. For example: 
+
+To create a task, you can say: "Add 'Read a book' to the list 'Inbox' at 2:00pm tomorrow for 45 minutes". You can also leave out details like the list, time, date, or duration—they're optional! 
+
+Let's get started! What would you like to do?`,
 			sender: 'ai',
 		},
 	])
-	const lastMessageRef = useRef(null)
+	const scrollRef = useRef(null)
 	const [input, setInput] = useState('')
 	const inputRef = useRef(null)
 
 	useEffect(() => {
-		if (isOpen && inputRef) {
+		if (isOpen && inputRef.current) {
 			inputRef.current.focus()
 		}
 	}, [isOpen])
 
-	//auto scroll to the lowest message
 	useEffect(() => {
-		if (lastMessageRef.current) {
-			lastMessageRef.current.scrollIntoView({ behavior: 'smooth' })
+		if (scrollRef.current) {
+			scrollRef.current.scrollIntoView({ behavior: 'smooth' })
 		}
 	}, [messages])
 
@@ -45,27 +49,25 @@ export default function Chatbox({ fetchData }) {
 			setMessages([
 				...messages,
 				{ text: text, sender: 'user' },
-				{ text: 'Loading...', sender: 'ai' },
+				{ text: 'Loading...', sender: 'ai', loading: true },
 			])
 			setLoading(true)
 
 			try {
-				//call ai
 				const res = await axios.post('/api/ai/message', {
 					current_list: currentList,
 					input: text,
 				})
-				//use new messages both fail and success
 				if (res.data && res.data.valid === false) {
 					setMessages((previousMessages) => [
-						...previousMessages.slice(0, -1), //remove loading
+						...previousMessages.slice(0, -1),
 						{ text: res.data.message, sender: 'ai' },
 					])
 				} else {
 					setConfirm(true)
 					setData(res.data.output)
 					setMessages((previousMessages) => [
-						...previousMessages.slice(0, -1), //remove loading
+						...previousMessages.slice(0, -1),
 						{
 							text: outputToText(res.data.output),
 							sender: 'ai',
@@ -125,7 +127,10 @@ export default function Chatbox({ fetchData }) {
 
 	const handleConfirm = async () => {
 		try {
-			setMessages([...messages, { text: 'Loading...', sender: 'ai' }])
+			setMessages([
+				...messages,
+				{ text: 'Loading...', sender: 'ai', loading: true },
+			])
 			setLoading(true)
 			const res = await axios.post('/api/ai/confirm', {
 				info: data,
@@ -133,7 +138,7 @@ export default function Chatbox({ fetchData }) {
 			setData(null)
 			setConfirm(false)
 			setMessages((previousMessages) => [
-				...previousMessages.slice(0, -1), //remove loading
+				...previousMessages.slice(0, -1),
 				{ text: res.data, sender: 'ai' },
 			])
 			setLoading(false)
@@ -154,101 +159,139 @@ export default function Chatbox({ fetchData }) {
 		])
 	}
 
-	const handleClear = () => {
-		//reset messages
+	const handleClose = () => {
+		setIsOpen(false)
 		setMessages([
 			{
-				text: `	Hello! I'm your AI assistant here to help you manage your todos. You can ask me to create, update, or delete tasks from your todo list. For example: \n
-					To create a task, you can say: "Add 'Read a book' to the list 'Inbox' at 2:00pm tomorrow for 45 minutes". You can also leave out details like the list, time, date, or duration—they're optional! 
-					
-					Let's get started! What would you like to do?
-				`,
+				text: `Hello! I'm your AI assistant here to help you manage your todos. You can ask me to create, update, or delete tasks from your todo list. For example: 
+
+To create a task, you can say: "Add 'Read a book' to the list 'Inbox' at 2:00pm tomorrow for 45 minutes". You can also leave out details like the list, time, date, or duration—they're optional! 
+
+Let's get started! What would you like to do?`,
 				sender: 'ai',
 			},
 		])
 		setConfirm(false)
+		setData(null)
+		setInput('')
+	}
+
+	const handleKeyPress = (e) => {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault()
+			handleSubmit(e)
+		}
 	}
 
 	return (
-		<div className="fixed bottom-6 right-6 z-40 h-3/5">
-			<div className="flex flex-col items-end h-full justify-end">
-				{isOpen && (
-					<div className="flex flex-col justify-between shadow-md bg-gray-100 border-2 border-gray-200 w-[500px] h-full m-2 rounded-xl p-3">
-						<div className="overflow-y-auto flex flex-col mb-2">
-							{messages.map((message, index) => (
+		<>
+			{!isOpen && (
+				<button
+					onClick={() => setIsOpen(true)}
+					className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all z-40 flex items-center justify-center focus:ring-0"
+					aria-label="Open chatbot"
+				>
+					<HiChat className="w-6 h-6" />
+				</button>
+			)}
+
+			{isOpen && (
+				<div className="fixed bottom-6 right-6 w-full max-w-md h-96 sm:h-[500px] flex flex-col shadow-2xl z-50 bg-white border border-gray-200 rounded-xl">
+					<div className="border-b border-gray-200 px-4 py-3 bg-blue-600 text-white rounded-t-xl flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<HiChat className="w-5 h-5" />
+							<h3 className="font-semibold">ToDoAI Assistant</h3>
+						</div>
+						<button
+							onClick={handleClose}
+							className="p-1 hover:bg-white/20 rounded transition-colors focus:ring-0"
+							aria-label="Close chatbot"
+						>
+							<HiX className="w-5 h-5" />
+						</button>
+					</div>
+
+					<div className="flex-1 overflow-y-auto p-4 space-y-4">
+						{messages.map((message, index) => (
+							<div
+								key={index}
+								className={`flex ${
+									message.sender === 'user' ? 'justify-end' : 'justify-start'
+								}`}
+							>
 								<div
-									key={index}
-									className={`max-w-[75%] py-2 px-3 rounded-xl mb-2 text-wrap overflow-ellipsis whitespace-pre-line text-base border ${
+									className={`max-w-xs px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${
 										message.sender === 'user'
-											? 'self-end bg-white text-black'
-											: 'self-start bg-blue-600 text-white'
+											? 'bg-blue-600 text-white rounded-br-none'
+											: 'bg-gray-100 text-gray-900 rounded-bl-none'
 									}`}
-									ref={index === messages.length - 1 ? lastMessageRef : null}
 								>
 									{message.text}
 								</div>
-							))}
-							{confirm && (
-								<div className="flex gap-2 items-center">
-									<Button
-										fullSized
-										color="failure"
-										onClick={handleCancel}
-										className="focus:ring-0 text-white"
-									>
-										Cancel
-									</Button>
-									<Button
-										fullSized
-										color="success"
-										onClick={handleConfirm}
-										className="focus:ring-0 text-white"
-									>
-										Confirm
-									</Button>
+							</div>
+						))}
+						{loading && (
+							<div className="flex justify-start">
+								<div className="bg-gray-100 text-gray-900 px-4 py-2 rounded-lg rounded-bl-none">
+									<div className="flex gap-1">
+										<div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+										<div
+											className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+											style={{ animationDelay: '0.1s' }}
+										></div>
+										<div
+											className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+											style={{ animationDelay: '0.2s' }}
+										></div>
+									</div>
 								</div>
-							)}
-						</div>
-						<form
-							className="flex justify-between items-center gap-2"
-							onSubmit={handleSubmit}
-						>
-							<Button
-								color="gray"
-								onClick={handleClear}
-								className="focus:ring-0 focus:text-inherit enabled:hover:text-inherit"
-							>
-								<BiSolidTrash size={20} />
-							</Button>
+							</div>
+						)}
+						{confirm && (
+							<div className="flex gap-2 items-center mt-2">
+								<Button
+									color="failure"
+									onClick={handleCancel}
+									className="focus:ring-0 text-white flex-1"
+								>
+									Cancel
+								</Button>
+								<Button
+									color="success"
+									onClick={handleConfirm}
+									className="focus:ring-0 text-white flex-1"
+								>
+									Confirm
+								</Button>
+							</div>
+						)}
+						<div ref={scrollRef} />
+					</div>
+
+					<div className="border-t border-gray-200 p-4 bg-white rounded-b-xl space-y-2">
+						<div className="flex gap-2">
 							<TextInput
-								className="w-full"
-								ref={inputRef}
-								type="text"
-								placeholder="New request"
+								placeholder="Ask me anything..."
 								value={input}
-								disabled={confirm}
 								onChange={(e) => setInput(e.target.value)}
+								onKeyPress={handleKeyPress}
+								disabled={loading || confirm}
+								className="flex-1 text-sm"
+								ref={inputRef}
 							/>
 							<Button
-								color="gray"
+								size="sm"
+								color="blue"
 								onClick={handleSubmit}
-								className="focus:ring-0 focus:text-inherit enabled:hover:text-inherit"
+								disabled={loading || !input.trim() || confirm}
+								className="focus:ring-0"
 							>
-								<BiSend size={20} />
+								<HiPaperAirplane size={20} />
 							</Button>
-						</form>
+						</div>
 					</div>
-				)}
-				<div
-					className={
-						'rounded-2xl p-3 cursor-pointer' +
-						(isOpen ? ' bg-blue-300' : ' bg-blue-200')
-					}
-					onClick={() => setIsOpen(!isOpen)}
-				>
-					<Avatar alt="Toggle Chat" img="/chatbox.svg" size="sm" />
 				</div>
-			</div>
-		</div>
+			)}
+		</>
 	)
 }

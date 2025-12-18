@@ -10,7 +10,6 @@ import './css/calendarStyles.css'
 import { Checkbox, Label } from 'flowbite-react'
 import { setList } from '../../redux/listSlice'
 
-
 export default function TodoCalendarView({
 	todos,
 	setSelectedTodo,
@@ -60,7 +59,11 @@ export default function TodoCalendarView({
 
 		return (
 			<div className="flex items-center px-1 gap-2 h-full">
-				<Label className={`text-sm truncate text-wrap overflow-hidden whitespace-normal max-h-full ${inListView ? 'text-black' : 'text-white' } ${completed && 'line-through'}`}>
+				<Label
+					className={`text-sm truncate text-wrap overflow-hidden whitespace-normal max-h-full ${
+						inListView ? 'text-black' : 'text-white'
+					} ${completed && 'line-through'}`}
+				>
 					{eventContent.event.title}
 				</Label>
 			</div>
@@ -69,21 +72,20 @@ export default function TodoCalendarView({
 
 	// Set the background color of the event (doesn't work when using eventContent since that's the inner element)
 	const eventDidMount = (info) => {
-        const { color } = info.event.extendedProps;
-        info.el.style.backgroundColor = color;
-        info.el.style.borderColor = color;
-        info.el.style.padding = '0'; // Remove padding
-        info.el.style.margin = '0'; // Remove margin
+		const { color } = info.event.extendedProps
+		info.el.style.backgroundColor = color
+		info.el.style.borderColor = color
+		info.el.style.padding = '0' // Remove padding
+		info.el.style.margin = '0' // Remove margin
 
 		// Check if the current view is list view and change the text color to black
-        const calendarApi = calendarRef.current.getApi();
-        if(calendarApi.view.type === 'listWeek') {
-            setInListView(true);
-        }
-		else{
-			setInListView(false);
+		const calendarApi = calendarRef.current.getApi()
+		if (calendarApi.view.type === 'listWeek') {
+			setInListView(true)
+		} else {
+			setInListView(false)
 		}
-    };
+	}
 
 	const handleEventDragStart = () => {
 		setDragging(true)
@@ -126,7 +128,10 @@ export default function TodoCalendarView({
 			end,
 			position: {
 				top: jsEvent.pageY,
-				left: jsEvent.pageX < window.innerWidth - 185 ? jsEvent.pageX : jsEvent.pageX - 185,	//don't expand the width
+				left:
+					jsEvent.pageX < window.innerWidth - 185
+						? jsEvent.pageX
+						: jsEvent.pageX - 185, //don't expand the width
 			},
 		})
 		// Focus input field after render
@@ -190,7 +195,7 @@ export default function TodoCalendarView({
 	}
 
 	return (
-		<div className="bg-white border border-gray-200 flex-grow m-4 rounded-xl p-4 text-nowrap">
+		<div className="bg-white border border-gray-200 flex-1 my-4 mr-4 rounded-xl p-4 text-nowrap flex flex-col min-h-0">
 			<FullCalendar
 				ref={calendarRef}
 				plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
