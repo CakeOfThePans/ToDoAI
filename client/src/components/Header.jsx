@@ -21,6 +21,7 @@ import { setList } from '../redux/listSlice'
 import axios from 'axios'
 import { useView } from '../contexts/ViewContext'
 import { useEffect, useState } from 'react'
+import { removeToken } from '../utils/cookieUtils'
 
 export default function Header() {
 	const { currentUser } = useSelector((state) => state.user)
@@ -41,10 +42,15 @@ export default function Header() {
 	const handleSignout = async () => {
 		try {
 			await axios.post(`/api/auth/sign-out`)
+			removeToken()
 			dispatch(removeUser())
 			dispatch(setList(null))
 		} catch (err) {
 			console.log(err)
+			// Even if API call fails, clear local state
+			removeToken()
+			dispatch(removeUser())
+			dispatch(setList(null))
 		}
 	}
 

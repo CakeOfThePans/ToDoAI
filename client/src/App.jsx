@@ -8,9 +8,8 @@ import Profile from './pages/Profile'
 import Todos from './pages/Todos'
 import { ViewProvider } from './contexts/ViewContext'
 
-//allow access to cookies for api requests
-import axios from 'axios'
-axios.defaults.withCredentials = true
+// Configure axios interceptors for token management
+import './utils/axiosConfig'
 
 export default function App() {
 	return (
