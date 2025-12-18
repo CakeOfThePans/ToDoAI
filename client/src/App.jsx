@@ -6,27 +6,29 @@ import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import Profile from './pages/Profile'
 import Todos from './pages/Todos'
+import { ViewProvider } from './contexts/ViewContext'
 
-//allow access to cookies for api requests
-import axios from 'axios'
-axios.defaults.withCredentials = true
+// Configure axios interceptors for token management
+import './utils/axiosConfig'
 
 export default function App() {
-  return (
-    <div className="h-screen">
-      <BrowserRouter>
-        <Header />
-        <div className='pt-16 h-full'>
-          <Routes>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/" element={<Todos />} />
-            </Route>
-          </Routes>
-        </div>
-      </BrowserRouter>
-    </div>
-  )
+	return (
+		<ViewProvider>
+			<div className="h-screen">
+				<BrowserRouter>
+					<Header />
+					<div className="pt-16 h-full">
+						<Routes>
+							<Route path="/sign-in" element={<SignIn />} />
+							<Route path="/sign-up" element={<SignUp />} />
+							<Route element={<PrivateRoute />}>
+								<Route path="/profile" element={<Profile />} />
+								<Route path="/" element={<Todos />} />
+							</Route>
+						</Routes>
+					</div>
+				</BrowserRouter>
+			</div>
+		</ViewProvider>
+	)
 }

@@ -1,13 +1,18 @@
-// Utility function to get a cookie value by name
-export const getCookie = (name) => {
-	const value = `; ${document.cookie}`
-	const parts = value.split(`; ${name}=`)
-	if (parts.length === 2) return parts.pop().split(';').shift()
-	return null
+// Utility functions for localStorage token management
+export const getToken = () => {
+	return localStorage.getItem('access_token')
 }
 
-// Check if the JWT access_token cookie exists
+export const setToken = (token) => {
+	localStorage.setItem('access_token', token)
+}
+
+export const removeToken = () => {
+	localStorage.removeItem('access_token')
+}
+
+// Check if the JWT access_token exists in localStorage
 export const hasValidJWT = () => {
-	const token = getCookie('access_token')
+	const token = getToken()
 	return token !== null && token !== undefined && token !== ''
 }

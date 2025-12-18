@@ -14,6 +14,7 @@ export default function TodoListView({ todos, fetchTodoData }) {
 	const [lists, setLists] = useState([])
 	const [creating, setCreating] = useState(false)
 	const [editing, setEditing] = useState(null) //only one list can be edited at a time
+	const [isUpdatingOrder, setIsUpdatingOrder] = useState(false)
 	const inputRef = useRef(null)
 	const dispatch = useDispatch()
 
@@ -46,26 +47,29 @@ export default function TodoListView({ todos, fetchTodoData }) {
 	}
 
 	const handleDragEnd = async (result) => {
-		if(!result.destination) return
+		if (!result.destination) return
 
 		const { source, destination } = result
-		if(source.index == destination.index) return
+		if (source.index == destination.index) return
+
+		setIsUpdatingOrder(true)
 
 		const items = Array.from(lists)
 		const [movedList] = items.splice(source.index, 1)
 		items.splice(destination.index, 0, movedList)
 		setLists(items)
 
-		try{
+		try {
 			await axios.post('/api/lists/updateOrder', {
 				//offset by 1 so we don't include the Inbox list
 				sourceIndex: source.index + 1,
-				destinationIndex: destination.index + 1
+				destinationIndex: destination.index + 1,
 			})
 			fetchData() //refetch data in case anything is off
-		}
-		catch(err){
+		} catch (err) {
 			console.log(err)
+		} finally {
+			setIsUpdatingOrder(false)
 		}
 	}
 
@@ -87,14 +91,19 @@ export default function TodoListView({ todos, fetchTodoData }) {
 				<DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable droppableId="droppable">
 						{(provided) => (
-							<ul 
+							<ul
 								className="list-none py-2 gap-2"
 								ref={provided.innerRef}
-    							{...provided.droppableProps}
+								{...provided.droppableProps}
 							>
 								{lists.map((list, index) => {
 									return (
-										<Draggable key={list._id} draggableId={list._id} index={index}>
+										<Draggable
+											key={list._id}
+											draggableId={list._id}
+											index={index}
+											isDragDisabled={isUpdatingOrder}
+										>
 											{(provided) => (
 												<div
 													ref={provided.innerRef}
@@ -111,7 +120,7 @@ export default function TodoListView({ todos, fetchTodoData }) {
 														setEditing={setEditing}
 														inputRef={inputRef}
 													/>
-										 		</div>
+												</div>
 											)}
 										</Draggable>
 									)

@@ -5,6 +5,7 @@ import { setUser, removeUser } from '../redux/userSlice'
 import { setList } from '../redux/listSlice'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
+import { removeToken } from '../utils/cookieUtils'
 
 export default function Profile() {
 	const { currentUser } = useSelector((state) => state.user)
@@ -27,10 +28,7 @@ export default function Profile() {
 		setUserUpdateSuccess(null)
 		setErrorMessage(null)
 		try {
-			const res = await axios.put(
-				`/api/users/${currentUser._id}`,
-				formData
-			)
+			const res = await axios.put(`/api/users/${currentUser._id}`, formData)
 			dispatch(setUser(res.data))
 			setUserUpdateSuccess('User updated successfully')
 			setFormData({ ...formData, password: '' })
@@ -47,30 +45,43 @@ export default function Profile() {
 		try {
 			await axios.delete(`/api/users/${currentUser._id}`)
 			await axios.post(`/api/auth/sign-out`)
+			removeToken()
 			dispatch(removeUser())
 			dispatch(setList(null))
 			setClicked(false)
 		} catch (err) {
 			setErrorMessage(err.response.data)
+			// Even if API call fails, clear local state
+			removeToken()
+			dispatch(removeUser())
+			dispatch(setList(null))
 			setClicked(false)
 		}
 	}
 	const handleSignout = async () => {
 		try {
 			await axios.post(`/api/auth/sign-out`)
+			removeToken()
 			dispatch(removeUser())
 			dispatch(setList(null))
 		} catch (err) {
 			console.log(err)
+			// Even if API call fails, clear local state
+			removeToken()
+			dispatch(removeUser())
+			dispatch(setList(null))
 		}
 	}
 	return (
 		<div className="mx-auto my-auto p-3 max-w-lg">
 			<h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-			<form className="flex flex-col gap-8" onSubmit={!clicked ? handleSubmit : null}>
+			<form
+				className="flex flex-col gap-8"
+				onSubmit={!clicked ? handleSubmit : null}
+			>
 				<TextInput
 					type="text"
-					autoComplete='off'
+					autoComplete="off"
 					id="username"
 					placeholder="Username"
 					defaultValue={currentUser.username}
@@ -78,7 +89,7 @@ export default function Profile() {
 				/>
 				<TextInput
 					type="text"
-					autoComplete='off'
+					autoComplete="off"
 					id="email"
 					placeholder="Email"
 					defaultValue={currentUser.email}
@@ -86,7 +97,7 @@ export default function Profile() {
 				/>
 				<TextInput
 					type="password"
-					autoComplete='off'
+					autoComplete="off"
 					id="password"
 					placeholder="New password"
 					value={formData.password}
@@ -135,7 +146,10 @@ export default function Profile() {
 							<Button Button color="gray" onClick={() => setShowModal(false)}>
 								No, cancel
 							</Button>
-							<Button color="failure" onClick={!clicked ? handleDeleteUser : null}>
+							<Button
+								color="failure"
+								onClick={!clicked ? handleDeleteUser : null}
+							>
 								Yes, I'm sure
 							</Button>
 						</div>
